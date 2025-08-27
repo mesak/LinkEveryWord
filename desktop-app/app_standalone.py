@@ -35,7 +35,7 @@ windows_search_instance = None
 simple_windows_search_instance = None
 
 try:
-    from everything_sdk import get_everything_sdk
+    from utils.everything_sdk import get_everything_sdk
     EVERYTHING_AVAILABLE = True
     DEMO_MODE = False
     WINDOWS_SEARCH_MODE = False
@@ -48,7 +48,7 @@ except Exception as e:
 
     # 嘗試使用 Windows Search API 作為備用
     try:
-        from windows_search_api import get_windows_search_api
+        from utils.windows_search_api import get_windows_search_api
         windows_search_instance = get_windows_search_api()
 
         # 測試 Windows Search API 是否可用
@@ -66,7 +66,7 @@ except Exception as e:
 
         # 嘗試使用簡化的 Windows Search
         try:
-            from simple_windows_search import get_simple_windows_search
+            from utils.simple_windows_search import get_simple_windows_search
             simple_windows_search_instance = get_simple_windows_search()
 
             if simple_windows_search_instance.is_windows_search_available():
@@ -87,7 +87,7 @@ except Exception as e:
             print("  應用程式將以示範模式運行")
 
             # 載入示範模組並建立實例
-            from mock_everything import get_mock_everything_sdk
+            from utils.mock_everything import get_mock_everything_sdk
             mock_sdk_instance = get_mock_everything_sdk()
 
 # 設定 Flask 應用程式
