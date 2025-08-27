@@ -1,4 +1,6 @@
-﻿# LinkEveryWord
+﻿﻿# LinkEveryWord
+
+<p align="center"><img src="image.png" width="128"></p>
 
  **LinkEveryWord** 是一個全面的檔案搜尋和連結管理解決方案，讓您可以快速找到並連結任何檔案。
 
@@ -87,10 +89,7 @@ LinkEveryWord/
 |  Chrome Extension |  規劃中 | 0% | 待開發 |
 
 ##  技術文件
-
 - [Desktop App 使用指南](desktop-app/README.md)
-- [Desktop App 性能優化報告](desktop-app/PERFORMANCE_OPTIMIZATION.md)
-- [Desktop App 專案整理總結](desktop-app/PROJECT_CLEANUP_SUMMARY.md)
 
 ##  貢獻指南
 

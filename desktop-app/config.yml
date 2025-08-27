@@ -1,0 +1,47 @@
+# LinkEveryWord Desktop App Configuration
+# 應用程式配置文件
+
+server:
+  # 服務器主機地址
+  host: '127.0.0.1'
+  
+  # 服務器端口號
+  port: 5000
+  
+  # 調試模式 (生產環境建議設為 false)
+  debug: false
+  
+  # 是否使用自動重載 (生產環境建議設為 false)
+  use_reloader: false
+
+app:
+  # 應用程式名稱
+  name: 'Everything Flask 搜尋應用程式'
+  
+  # 瀏覽器自動開啟延遲時間 (秒)
+  browser_delay: 2
+
+logging:
+  # 日誌級別: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: 'INFO'
+  
+  # 是否啟用文件日誌
+  enable_file: true
+  
+  # 日誌文件名
+  filename: 'app.log'
+  
+  # 日誌文件最大大小 (MB)
+  max_size: 10
+  
+  # 保留的日誌文件數量
+  backup_count: 5
+  
+  # 是否啟用控制台日誌
+  enable_console: true
+  
+  # 日誌格式
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  
+  # 日期格式
+  date_format: '%Y-%m-%d %H:%M:%S'

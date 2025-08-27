@@ -1,21 +1,19 @@
-﻿#  LinkEveryWord Desktop App
+﻿﻿#  LinkEveryWord Desktop App
+
+<p align="center"><img src="../image.png" width="128"></p>
 
 基於 voidtools Everything 搜尋引擎的桌面應用程式，提供強大的本地檔案搜尋功能。
 
 ##  主要功能
 
 -  **即時搜尋**: 基於 Everything SDK 的毫秒級檔案搜尋
+-  **彈性備援機制**: 自動在 Everything、Windows Search 和示範模式之間切換
 -  **Web 介面**: 現代化的響應式 Web 操作介面
 -  **獨立執行**: 15MB 的單一執行檔，無需安裝
+-  **高度可配置**: 透過 `config.yml` 檔案自訂服務器和應用程式行為
 -  **示範模式**: 即使沒有 Everything 也能體驗功能
--  **單實例保護**: 確保同時只運行一個應用程式實例
-
-## 📚 開發者指南
-
-### Singleton 功能實現
-- 📖 **[完整實現指南](SINGLETON_IMPLEMENTATION_GUIDE.md)** - 詳細的實現過程、遇到的問題和解決方案
-- 🚨 **[故障排除檢查清單](SINGLETON_TROUBLESHOOTING.md)** - 快速診斷和解決常見問題
-- 🧪 **測試腳本**: `test_filelock_singleton.py` - 自動化測試 singleton 功能
+-  **單實例保護**: 改用基於文件鎖的機制，確保只有一個應用程式實例在運行
+-  **完整日誌系統**: 支援多級別、文件輪轉和控制台輸出 (詳見 LOGGER_GUIDE.md)
 -  **中文支援**: 完整的繁體中文介面
 -  **萬用字元**: 支援 *.txt, *.pdf 等搜尋模式
 -  **詳細資訊**: 顯示檔案大小、修改時間等詳細資訊
@@ -55,19 +53,20 @@ python -m PyInstaller app_standalone.spec --clean
 ### 專案結構
 `
 desktop-app/
- app_standalone.py          # 主應用程式 (優化版)
- everything_sdk.py          # Everything SDK Python 包裝
- mock_everything.py         # 示範模式模組
- templates/index.html       # Web 介面模板
- Everything64.dll           # Everything SDK DLL (64位)
- Everything32.dll           # Everything SDK DLL (32位)
- app_standalone.spec        # PyInstaller 打包規格
- version_info.txt           # 執行檔版本資訊
+ app_standalone.py          # 主應用程式入口
+ config.yml                 # 應用程式配置文件
+ CONFIG.md                  # 配置文件說明文件
+ LOGGER_GUIDE.md            # 日誌系統說明文件
+ utils/                     # 核心模組
+     ...                    # (包含 Everything, Windows Search 等 SDK 模組)
+ templates/                 # Web 介面模板
+ static/                    # 靜態檔案 (CSS, JS)
  build.bat                  # 自動打包腳本
  create_release.bat         # 發布包建立腳本
+ version_info.txt           # 執行檔版本資訊
+ app_standalone.spec        # PyInstaller 打包規格
  dist/                      # 打包輸出目錄
-     EverythingFlaskSearch.exe  # 主執行檔 (15MB)
-     README.txt             # 使用說明
+     EverythingFlaskSearch.exe  # 主執行檔
 `
 
 ##  使用說明
@@ -85,17 +84,6 @@ desktop-app/
    - 點擊檔案名稱開啟檔案
    - 檢視檔案大小、修改時間等詳細資訊
    - 查看完整檔案路徑
-
-##  性能特色
-
-### 最新優化 (v2.0)
--  **消除重複函數調用**: 實例預載入，提升 5-15% 響應速度
--  **單例模式優化**: 減少記憶體佔用
--  **直接實例使用**: 零函數調用開銷
-
-### 詳細報告
-- [性能優化報告](PERFORMANCE_OPTIMIZATION.md)
-- [專案整理總結](PROJECT_CLEANUP_SUMMARY.md)
 
 ##  技術架構
 
@@ -142,18 +130,20 @@ GET /status
 GET /api/search/{query}?limit=50
 `
 
-##  自訂化
+## ⚙️ 設定與自訂化
 
-### 修改介面
-- 編輯 	emplates/index.html
-- 調整 CSS 樣式和佈局
+本應用程式支援透過 `config.yml` 檔案進行高度自訂化。如果 `config.yml` 不存在，應用程式在首次啟動時會自動創建一份預設的配置文件。
 
-### 修改搜尋邏輯
-- 編輯 everything_sdk.py
-- 調整搜尋參數和結果處理
+您可以自訂的項目包括：
+- **服務器設定**: `host`, `port`, `debug` 模式等。
+- **應用程式行為**: `browser_delay` (瀏覽器自動開啟延遲時間)。
+- **日誌系統**: `level`, `filename`, `max_size` 等。
+
+詳細的配置選項和說明，請參考 **CONFIG.md** 和 **LOGGER_GUIDE.md** 文件。
 
 ##  版本歷史
 
+- **v2.1 (功能增強)**: 新增 `config.yml` 配置文件、備用搜尋引擎、日誌系統並重構專案結構。
 - **v2.0**: 性能優化版本，實例預載入
 - **v1.0**: 初始版本，基本搜尋功能
 
