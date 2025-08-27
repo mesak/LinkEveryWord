@@ -7,6 +7,10 @@ import os
 import webbrowser
 import threading
 import time
+import socket
+import signal
+import atexit
+from filelock import FileLock
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
@@ -27,23 +31,64 @@ def get_resource_path(relative_path):
 # 嘗試載入 Everything SDK 並建立實例
 everything_sdk_instance = None
 mock_sdk_instance = None
+windows_search_instance = None
+simple_windows_search_instance = None
 
 try:
     from everything_sdk import get_everything_sdk
     EVERYTHING_AVAILABLE = True
     DEMO_MODE = False
+    WINDOWS_SEARCH_MODE = False
+    SIMPLE_SEARCH_MODE = False
     # 建立 SDK 實例 (單例)
     everything_sdk_instance = get_everything_sdk()
     print("✓ Everything SDK 載入成功")
 except Exception as e:
-    EVERYTHING_AVAILABLE = False
-    DEMO_MODE = True
     print(f"⚠ Everything SDK 載入失敗: {e}")
-    print("  應用程式將以示範模式運行")
 
-    # 載入示範模組並建立實例
-    from mock_everything import get_mock_everything_sdk
-    mock_sdk_instance = get_mock_everything_sdk()
+    # 嘗試使用 Windows Search API 作為備用
+    try:
+        from windows_search_api import get_windows_search_api
+        windows_search_instance = get_windows_search_api()
+
+        # 測試 Windows Search API 是否可用
+        if windows_search_instance.is_windows_search_available():
+            EVERYTHING_AVAILABLE = False
+            DEMO_MODE = False
+            WINDOWS_SEARCH_MODE = True
+            SIMPLE_SEARCH_MODE = False
+            print("✓ 使用 Windows Search API 作為備用搜索引擎")
+        else:
+            raise RuntimeError("Windows Search API 不可用")
+
+    except Exception as ws_error:
+        print(f"⚠ Windows Search API 也無法使用: {ws_error}")
+
+        # 嘗試使用簡化的 Windows Search
+        try:
+            from simple_windows_search import get_simple_windows_search
+            simple_windows_search_instance = get_simple_windows_search()
+
+            if simple_windows_search_instance.is_windows_search_available():
+                EVERYTHING_AVAILABLE = False
+                DEMO_MODE = False
+                WINDOWS_SEARCH_MODE = False
+                SIMPLE_SEARCH_MODE = True
+                print("✓ 使用簡化 Windows Search 作為備用搜索引擎")
+            else:
+                raise RuntimeError("簡化 Windows Search 不可用")
+
+        except Exception as sws_error:
+            print(f"⚠ 簡化 Windows Search 也無法使用: {sws_error}")
+            EVERYTHING_AVAILABLE = False
+            DEMO_MODE = True
+            WINDOWS_SEARCH_MODE = False
+            SIMPLE_SEARCH_MODE = False
+            print("  應用程式將以示範模式運行")
+
+            # 載入示範模組並建立實例
+            from mock_everything import get_mock_everything_sdk
+            mock_sdk_instance = get_mock_everything_sdk()
 
 # 設定 Flask 應用程式
 app = Flask(__name__,
@@ -56,6 +101,20 @@ CORS(app)
 def index():
     """主頁面"""
     return render_template('index.html')
+
+
+@app.route('/status')
+def app_status():
+    """取得應用程式狀態"""
+    return jsonify({
+        'everything_available': EVERYTHING_AVAILABLE,
+        'demo_mode': DEMO_MODE,
+        'windows_search_mode': WINDOWS_SEARCH_MODE if 'WINDOWS_SEARCH_MODE' in globals() else False,
+        'simple_search_mode': SIMPLE_SEARCH_MODE if 'SIMPLE_SEARCH_MODE' in globals() else False,
+        'search_engine': ('Everything' if EVERYTHING_AVAILABLE else
+                          ('Windows Search' if WINDOWS_SEARCH_MODE else
+                           ('Simple Search' if SIMPLE_SEARCH_MODE else 'Demo')))
+    })
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -82,8 +141,15 @@ def search():
         # 執行搜尋
         if DEMO_MODE:
             results, total_count = mock_sdk_instance.search(query, max_results)
+        elif WINDOWS_SEARCH_MODE:
+            results, total_count = windows_search_instance.search(
+                query, max_results)
+        elif SIMPLE_SEARCH_MODE:
+            results, total_count = simple_windows_search_instance.search(
+                query, max_results)
         else:
-            results, total_count = everything_sdk_instance.search(query, max_results)
+            results, total_count = everything_sdk_instance.search(
+                query, max_results)
 
         # 轉換結果為字典格式
         results_data = [result.to_dict() for result in results]
@@ -94,7 +160,9 @@ def search():
             'results': results_data,
             'total_count': total_count,
             'displayed_count': len(results_data),
-            'demo_mode': DEMO_MODE
+            'demo_mode': DEMO_MODE,
+            'windows_search_mode': WINDOWS_SEARCH_MODE if 'WINDOWS_SEARCH_MODE' in globals() else False,
+            'simple_search_mode': SIMPLE_SEARCH_MODE if 'SIMPLE_SEARCH_MODE' in globals() else False
         })
 
     except Exception as e:
@@ -137,7 +205,8 @@ def api_search(query):
         if DEMO_MODE:
             results, total_count = mock_sdk_instance.search(query, max_results)
         else:
-            results, total_count = everything_sdk_instance.search(query, max_results)
+            results, total_count = everything_sdk_instance.search(
+                query, max_results)
 
         return jsonify({
             'query': query,
@@ -179,8 +248,105 @@ def open_browser():
     webbrowser.open('http://127.0.0.1:5000')
 
 
+# 全局变量保存锁对象
+app_lock = None
+
+
+def check_single_instance():
+    """
+    检查是否已有应用程序实例在运行
+    使用文件锁实现 singleton 功能
+    """
+    global app_lock
+    try:
+        # 使用文件锁，确保真正的单实例
+        lock_file = os.path.join(os.path.dirname(
+            __file__), "linkeveryword.lock")
+        app_lock = FileLock(lock_file)
+
+        # 尝试获取锁，不阻塞
+        app_lock.acquire(timeout=0.1)
+        print("✅ 成功获取应用程序锁")
+        return True
+
+    except Exception as e:
+        print(f"🔒 应用程序锁获取失败: {e}")
+        app_lock = None
+        return False
+
+
+def cleanup_lock():
+    """清理锁"""
+    global app_lock
+    if app_lock and app_lock.is_locked:
+        try:
+            app_lock.release()
+            print("🔓 釋放應用程式實例鎖")
+        except Exception:
+            pass
+        app_lock = None
+
+
+def signal_handler(signum, frame):
+    """信号处理函数"""
+    print(f"\n📡 接收到信號 {signum}，正在清理...")
+    cleanup_lock()
+    sys.exit(0)
+
+
+def setup_cleanup():
+    """设置清理机制"""
+    # 注册程序退出时的清理函数
+    atexit.register(cleanup_lock)
+
+    # 注册信号处理器（仅在支持的平台上）
+    try:
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGTERM, signal_handler)
+    except AttributeError:
+        # Windows 不支持某些信号
+        pass
+
+
+def check_flask_port_available():
+    """检查 Flask 端口是否可用"""
+    try:
+        test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # 同样不使用 SO_REUSEADDR 进行真正的检查
+        test_socket.bind(('127.0.0.1', 5000))
+        test_socket.close()
+        return True
+    except OSError:
+        return False
+
+
 def main():
     """主函數"""
+    # 設置清理機制
+    setup_cleanup()
+
+    # 確保應用程式只執行一個實例 - 多重检查
+    print("🔒 檢查應用程式實例...")
+
+    # 检查 1: Singleton 锁端口
+    if not check_single_instance():
+        print("❌ 應用程式已經在執行中！(檢測到 Singleton 鎖)")
+        print("請檢查系統托盤或工作管理員中是否已有此應用程式運行。")
+        print("如果確認沒有運行，請等待幾秒後再試。")
+        sys.exit(1)
+
+    print("✓ Singleton 鎖檢查通過")
+
+    # 检查 2: Flask 端口是否可用
+    if not check_flask_port_available():
+        print("❌ 應用程式已經在執行中！(端口 5000 被佔用)")
+        print("另一個應用程式實例正在使用 Web 服務端口。")
+        cleanup_lock()
+        sys.exit(1)
+
+    print("✓ Web 服務端口檢查通過")
+    print("✓ 應用程式實例檢查完成")
+
     print("=" * 60)
     print("🔍 Everything Flask 搜尋應用程式")
     print("=" * 60)
@@ -216,6 +382,9 @@ def main():
     except Exception as e:
         print(f"\n❌ 應用程式錯誤: {e}")
         input("按 Enter 鍵退出...")
+    finally:
+        # 清理锁套接字
+        cleanup_lock()
 
 
 if __name__ == '__main__':

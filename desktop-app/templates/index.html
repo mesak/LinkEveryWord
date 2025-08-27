@@ -368,10 +368,16 @@
                 const response = await fetch('/status');
                 const data = await response.json();
                 
-                if (data.success && data.everything_running) {
-                    showStatus('Everything 服務正常運行', 'success');
+                if (data.everything_available) {
+                    showStatus('Everything 搜尋引擎正常運行', 'success');
+                } else if (data.windows_search_mode) {
+                    showStatus('使用 Windows Search API 作為備用搜尋引擎', 'warning');
+                } else if (data.simple_search_mode) {
+                    showStatus('使用簡化 Windows Search 作為備用搜尋引擎', 'warning');
+                } else if (data.demo_mode) {
+                    showStatus('以示範模式運行 - 僅顯示模擬結果', 'warning');
                 } else {
-                    showStatus('請確保 Everything 搜尋引擎正在運行', 'warning');
+                    showStatus('搜尋服務不可用', 'error');
                 }
             } catch (error) {
                 showStatus('無法連接到搜尋服務', 'error');
@@ -407,10 +413,22 @@
                     currentResults = data.results;
                     displayResults(currentResults);
                     
-                    if (data.total_count > data.displayed_count) {
-                        showStatus(`找到 ${data.total_count} 個結果，顯示前 ${data.displayed_count} 個`, 'success');
+                    // 根據搜尋引擎類型顯示不同的狀態訊息
+                    let searchEngine = '';
+                    if (data.demo_mode) {
+                        searchEngine = ' (示範模式)';
+                    } else if (data.windows_search_mode) {
+                        searchEngine = ' (Windows Search)';
+                    } else if (data.simple_search_mode) {
+                        searchEngine = ' (簡化搜尋)';
                     } else {
-                        showStatus(`找到 ${data.total_count} 個結果`, 'success');
+                        searchEngine = ' (Everything)';
+                    }
+                    
+                    if (data.total_count > data.displayed_count) {
+                        showStatus(`找到 ${data.total_count} 個結果，顯示前 ${data.displayed_count} 個${searchEngine}`, 'success');
+                    } else {
+                        showStatus(`找到 ${data.total_count} 個結果${searchEngine}`, 'success');
                     }
                 } else {
                     showStatus(data.error || '搜尋失敗', 'error');
