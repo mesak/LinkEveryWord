@@ -89,8 +89,8 @@ class EverythingSDK:
         """載入 Everything DLL"""
         dll_paths = [
             # 嘗試從系統路徑載入
-            r".dll\Everything64.dll",
-            r".dll\Everything32.dll",
+            r"dll\Everything64.dll",
+            r"dll\Everything32.dll",
             # 嘗試從 Everything 安裝目錄載入
             r"C:\Program Files\Everything\Everything64.dll",
             r"C:\Program Files (x86)\Everything\Everything32.dll",

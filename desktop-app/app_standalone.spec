@@ -10,16 +10,15 @@ a = Analysis(
     pathex=[current_dir],
     binaries=[
         # 包含 Everything DLL 檔案
-        ('Everything64.dll', '.'),
-        ('Everything32.dll', '.'),
+        ('dll/Everything64.dll', 'dll'),
+        ('dll/Everything32.dll', 'dll'),
     ],
     datas=[
         # 包含 templates 資料夾
         ('templates', 'templates'),
         # 包含其他必要檔案
         ('README.md', '.'),
-        ('PERFORMANCE_OPTIMIZATION.md', '.'),
-        ('PROJECT_CLEANUP_SUMMARY.md', '.'),
+        
     ],
     hiddenimports=[
         'flask',
@@ -73,6 +72,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=None,  # 如果有圖示檔案，可以在這裡指定
+    icon='favicon.ico',  # 如果有圖示檔案，可以在這裡指定
     version='version_info.txt',
 )

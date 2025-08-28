@@ -1,6 +1,6 @@
 ﻿﻿# LinkEveryWord
 
-<p align="center"><img src="image.png" width="128"></p>
+<p align="center"><img src="image.png" width="100%"></p>
 
  **LinkEveryWord** 是一個全面的檔案搜尋和連結管理解決方案，讓您可以快速找到並連結任何檔案。
 
