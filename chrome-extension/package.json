@@ -44,6 +44,13 @@
       "scripting",
       "sidePanel"
     ],
+    "commands": {
+      "open-search-panel": {
+        "suggested_key": { "default": "Ctrl+Shift+F" },
+        "description": "Open LinkEveryWord search panel",
+        "global": true
+      }
+    },
     "side_panel": {
       "default_path": "sidepanel.html"
     },

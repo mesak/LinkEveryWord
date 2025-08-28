@@ -39,14 +39,18 @@ class MockEverythingSearchResult:
 
     def _format_size(self, size_bytes: int) -> str:
         """格式化檔案大小"""
+        # 保持與 EverythingSearchResult 的格式一致：整數單位，資料夾顯示 '-'
+        if self.is_folder:
+            return "-"
         if size_bytes == 0:
             return "0 B"
         size_names = ["B", "KB", "MB", "GB", "TB"]
         i = 0
-        while size_bytes >= 1024 and i < len(size_names) - 1:
-            size_bytes /= 1024.0
+        size = int(size_bytes)
+        while size >= 1024 and i < len(size_names) - 1:
+            size = size // 1024
             i += 1
-        return f"{size_bytes:.1f} {size_names[i]}"
+        return f"{size} {size_names[i]}"
 
 
 class MockEverythingSDK:
@@ -136,15 +140,11 @@ class MockEverythingSDK:
 
 
 # 創建全域實例，使用單例模式
-_mock_sdk_instance = None
-
-
 def get_mock_everything_sdk():
-    """取得 Mock Everything SDK 實例 (單例模式)"""
-    global _mock_sdk_instance
-    if _mock_sdk_instance is None:
-        _mock_sdk_instance = MockEverythingSDK()
-    return _mock_sdk_instance
+    """取得 Mock Everything SDK 實例 (單例模式) - 使用函數屬性避免 global 語句"""
+    if not hasattr(get_mock_everything_sdk, "instance"):
+        get_mock_everything_sdk.instance = MockEverythingSDK()
+    return get_mock_everything_sdk.instance
 
 
 # 保持向後相容性 - 全域變數指向單例實例

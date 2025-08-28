@@ -8,56 +8,104 @@ import { Label } from "./components/ui/label"
 function Options() {
   const [backendUrl, setBackendUrl] = useState("http://127.0.0.1:5000")
   const [queryKey, setQueryKey] = useState("q")
-  const [shortcut, setShortcut] = useState("Ctrl+Shift+L")
-  const [isRecording, setIsRecording] = useState(false)
+  const [queryParamsText, setQueryParamsText] = useState(JSON.stringify({ max_results: 50, query: "{{QUERY}}" }, null, 2))
+  const [kvEntries, setKvEntries] = React.useState<Array<{ key: string; value: string }>>([])
+  const [newKey, setNewKey] = useState("")
+  const [newValue, setNewValue] = useState("")
 
   // 載入設定
   useEffect(() => {
-    chrome.storage.sync.get(["backendUrl", "queryKey", "shortcut"], (result) => {
+    chrome.storage.sync.get(["backendUrl", "queryKey", "queryParams"], (result) => {
       if (result.backendUrl) setBackendUrl(result.backendUrl)
       if (result.queryKey) setQueryKey(result.queryKey)
-      if (result.shortcut) setShortcut(result.shortcut)
+      if (result.queryParams) {
+        setQueryParamsText(result.queryParams)
+        try {
+          const obj = JSON.parse(result.queryParams)
+          const entries = Object.keys(obj).map((k) => ({ key: k, value: typeof obj[k] === 'string' ? obj[k] : JSON.stringify(obj[k]) }))
+          setKvEntries(entries)
+        } catch (e) {
+          // ignore parse errors
+        }
+      } else {
+        // default
+        const def = JSON.stringify({ max_results: 50, query: "{{QUERY}}" }, null, 2)
+        setQueryParamsText(def)
+        setKvEntries([{ key: 'max_results', value: '50' }, { key: 'query', value: '{{QUERY}}' }])
+      }
     })
   }, [])
 
   // 保存設定
   const saveSettings = () => {
-    chrome.storage.sync.set({
-      backendUrl,
-      queryKey,
-      shortcut
-    }, () => {
-      // 顯示保存成功訊息
+    // 驗證 queryParamsText 必須是合法 JSON 且含有 {{QUERY}} 字串
+    try {
+      // build object from kvEntries (entries with JSON values are parsed where possible)
+      const obj: any = {}
+      kvEntries.forEach((e) => {
+        // try parse e.value as JSON, otherwise keep as string
+        try {
+          obj[e.key] = JSON.parse(e.value)
+        } catch (err) {
+          obj[e.key] = e.value
+        }
+      })
+      const parsed = obj
+      const containsQuery = JSON.stringify(parsed).includes("{{QUERY}}")
+      if (!containsQuery) {
+        const status = document.getElementById("status")
+        if (status) {
+          status.textContent = "查詢參數必須包含 {{QUERY}} 變數，才能在 SidePanel 中被替換。"
+          status.style.color = "red"
+          setTimeout(() => (status.textContent = ""), 3000)
+        }
+        return
+      }
+
+      chrome.storage.sync.set({
+        backendUrl,
+        queryKey,
+        queryParams: JSON.stringify(parsed)
+      }, () => {
+        const status = document.getElementById("status")
+        if (status) {
+          status.textContent = "設定已保存！"
+          status.style.color = "green"
+          setTimeout(() => {
+            status.textContent = ""
+          }, 2000)
+        }
+      })
+    } catch (err) {
       const status = document.getElementById("status")
       if (status) {
-        status.textContent = "設定已保存！"
-        status.style.color = "green"
-        setTimeout(() => {
-          status.textContent = ""
-        }, 2000)
+        status.textContent = "查詢參數不是有效的 JSON，請修正後再儲存。"
+        status.style.color = "red"
+        setTimeout(() => (status.textContent = ""), 3000)
       }
-    })
-  }
-
-  // 處理快速鍵錄製
-  const handleShortcutRecording = (event: React.KeyboardEvent) => {
-    if (!isRecording) return
-
-    event.preventDefault()
-    const keys = []
-
-    if (event.ctrlKey || event.metaKey) keys.push("Ctrl")
-    if (event.shiftKey) keys.push("Shift")
-    if (event.altKey) keys.push("Alt")
-    if (event.key && !["Control", "Shift", "Alt", "Meta"].includes(event.key)) {
-      keys.push(event.key.toUpperCase())
-    }
-
-    if (keys.length > 1) {
-      setShortcut(keys.join("+"))
-      setIsRecording(false)
     }
   }
+
+  const addEntry = () => {
+    if (!newKey.trim()) return
+    setKvEntries([...kvEntries, { key: newKey.trim(), value: newValue }])
+    setNewKey("")
+    setNewValue("")
+  }
+
+  const removeEntry = (index: number) => {
+    const copy = [...kvEntries]
+    copy.splice(index, 1)
+    setKvEntries(copy)
+  }
+
+  const updateEntry = (index: number, field: 'key' | 'value', value: string) => {
+    const copy = [...kvEntries]
+    copy[index] = { ...copy[index], [field]: value }
+    setKvEntries(copy)
+  }
+
+  // 移除自定義快速鍵錄製功能
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -83,7 +131,7 @@ function Options() {
                 id="backend-url"
                 value={backendUrl}
                 onChange={(e) => setBackendUrl(e.target.value)}
-                placeholder="http://127.0.0.1:5000"
+                placeholder="http://127.0.0.1:5000/search"
               />
               <p className="text-sm text-muted-foreground mt-1">
                 您的搜尋API端點
@@ -91,16 +139,23 @@ function Options() {
             </div>
 
             <div>
-              <Label htmlFor="query-key">查詢參數鍵</Label>
-              <Input
-                id="query-key"
-                value={queryKey}
-                onChange={(e) => setQueryKey(e.target.value)}
-                placeholder="q"
-              />
-              <p className="text-sm text-muted-foreground mt-1">
-                API查詢參數的名稱（預設為q）
-              </p>
+              <Label>查詢參數（Key / Value）</Label>
+              <p className="text-sm text-muted-foreground mt-1">請使用 Key/Value 列表新增參數，值可以是字串或 JSON（如物件或陣列）；其中必須至少一個欄位包含 <code>{"{{QUERY}}"}</code> 用於被替換。</p>
+              <div className="space-y-2 mt-2">
+                {kvEntries.map((entry, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <Input value={entry.key} onChange={(e) => updateEntry(idx, 'key', e.target.value)} placeholder="key" />
+                    <Input value={entry.value} onChange={(e) => updateEntry(idx, 'value', e.target.value)} placeholder="value (string or JSON)" />
+                    <Button variant="destructive" onClick={() => removeEntry(idx)}>刪除</Button>
+                  </div>
+                ))}
+
+                <div className="flex gap-2">
+                  <Input value={newKey} onChange={(e) => setNewKey(e.target.value)} placeholder="new key" />
+                  <Input value={newValue} onChange={(e) => setNewValue(e.target.value)} placeholder="new value" />
+                  <Button onClick={addEntry}>新增</Button>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -114,26 +169,24 @@ function Options() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="shortcut">快速鍵</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="shortcut"
-                  value={shortcut}
-                  readOnly
-                  onKeyDown={handleShortcutRecording}
-                  className={isRecording ? "ring-2 ring-primary" : ""}
-                  placeholder="點擊錄製按鈕設定快速鍵"
-                />
+              <p className="text-sm text-muted-foreground">
+                使用Chrome內建的快捷鍵管理功能設定此擴充功能的快速鍵。
+              </p>
+              <div className="flex justify-center mt-4">
                 <Button
-                  onClick={() => setIsRecording(!isRecording)}
-                  variant={isRecording ? "destructive" : "outline"}
+                  variant="outline"
+                  onClick={() => {
+                    try {
+                      chrome.tabs.create({ url: "chrome://extensions/shortcuts" })
+                    } catch (err) {
+                      // 某些環境可能不允許直接開啟 chrome:// 頁面
+                      console.error("Failed to open shortcuts page:", err)
+                    }
+                  }}
                 >
-                  {isRecording ? "停止錄製" : "錄製快速鍵"}
+                  開啟Chrome快捷鍵設定頁面
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                按下錄製按鈕後，輸入您想要的快速鍵組合
-              </p>
             </div>
           </CardContent>
         </Card>
@@ -143,7 +196,7 @@ function Options() {
             儲存所有設定
           </Button>
         </div>
-
+        
         <div id="status" className="text-center text-sm"></div>
       </div>
     </div>

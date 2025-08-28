@@ -4,7 +4,6 @@ Everything SDK Python wrapper
 """
 import ctypes
 import datetime
-import struct
 import os
 from typing import List, Dict, Optional, Tuple
 
@@ -58,7 +57,7 @@ class EverythingSearchResult:
             'full_path': self.full_path,
             'extension': self.extension,
             'size': self.size,
-            'size_formatted': self._format_size(self.size),
+            'size_formatted': self._format_size(self.size, is_folder=self.is_folder),
             'date_created': self.date_created.isoformat() if self.date_created else None,
             'date_modified': self.date_modified.isoformat() if self.date_modified else None,
             'date_accessed': self.date_accessed.isoformat() if self.date_accessed else None,
@@ -66,16 +65,23 @@ class EverythingSearchResult:
             'is_folder': self.is_folder
         }
 
-    def _format_size(self, size_bytes: int) -> str:
-        """格式化檔案大小"""
-        if size_bytes == 0:
-            return "0 B"
+    def _format_size(self, size_bytes: int, is_folder: bool = False) -> str:
+        """格式化檔案大小（整數單位，不顯示小數），資料夾顯示 '-'"""
+        if is_folder:
+            return "-"
+        try:
+            if size_bytes is None or size_bytes == 0:
+                return "0 B"
+            size = int(size_bytes)
+        except (TypeError, ValueError):
+            return "-"
+
         size_names = ["B", "KB", "MB", "GB", "TB"]
         i = 0
-        while size_bytes >= 1024 and i < len(size_names) - 1:
-            size_bytes /= 1024.0
+        while size >= 1024 and i < len(size_names) - 1:
+            size = size // 1024
             i += 1
-        return f"{size_bytes:.1f} {size_names[i]}"
+        return f"{size} {size_names[i]}"
 
 
 class EverythingSDK:
@@ -288,12 +294,8 @@ class EverythingSDK:
 
 
 # 創建全域實例，但延遲載入
-everything_sdk = None
-
-
 def get_everything_sdk():
-    """取得 Everything SDK 實例"""
-    global everything_sdk
-    if everything_sdk is None:
-        everything_sdk = EverythingSDK()
-    return everything_sdk
+    """取得 Everything SDK 實例 (單例) - 使用函數屬性避免 global 語句"""
+    if not hasattr(get_everything_sdk, "instance"):
+        get_everything_sdk.instance = EverythingSDK()
+    return get_everything_sdk.instance
