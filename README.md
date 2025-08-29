@@ -1,6 +1,6 @@
-# LinkEveryWord
+﻿# LinkEveryWord
 
-<p align="center"><img src="image.png" width="100%"></p>
+<p align="center"><img src="../shared/image.png" width="100%"></p>
 
 **LinkEveryWord** 是一個全面的檔案搜尋與連結管理解決方案，旨在幫助您高效地尋找並管理您的數位檔案。本專案包含一個功能強大的桌面搜尋應用程式、一個無縫整合的瀏覽器擴充功能，以及一個仍在規劃中的 Web 平台。
 
