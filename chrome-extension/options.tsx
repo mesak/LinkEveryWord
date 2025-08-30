@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./com
 import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import { Label } from "./components/ui/label"
+import { Github, Earth } from 'lucide-react';
 
 function Options() {
-  const [backendUrl, setBackendUrl] = useState("http://127.0.0.1:5000")
+  const [backendUrl, setBackendUrl] = useState("http://127.0.0.1:5000/search")
   const [queryKey, setQueryKey] = useState("q")
   const [queryParamsText, setQueryParamsText] = useState(JSON.stringify({ max_results: 50, query: "{{QUERY}}" }, null, 2))
   const [kvEntries, setKvEntries] = React.useState<Array<{ key: string; value: string }>>([])
@@ -55,7 +56,7 @@ function Options() {
       if (!containsQuery) {
         const status = document.getElementById("status")
         if (status) {
-          status.textContent = "查詢參數必須包含 {{QUERY}} 變數，才能在 SidePanel 中被替換。"
+          status.textContent = chrome.i18n.getMessage("queryMustContainPlaceholder")
           status.style.color = "red"
           setTimeout(() => (status.textContent = ""), 3000)
         }
@@ -69,7 +70,7 @@ function Options() {
       }, () => {
         const status = document.getElementById("status")
         if (status) {
-          status.textContent = "設定已保存！"
+          status.textContent = chrome.i18n.getMessage("settingsSaved")
           status.style.color = "green"
           setTimeout(() => {
             status.textContent = ""
@@ -79,7 +80,7 @@ function Options() {
     } catch (err) {
       const status = document.getElementById("status")
       if (status) {
-        status.textContent = "查詢參數不是有效的 JSON，請修正後再儲存。"
+        status.textContent = chrome.i18n.getMessage("invalidJson")
         status.style.color = "red"
         setTimeout(() => (status.textContent = ""), 3000)
       }
@@ -111,22 +112,22 @@ function Options() {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">LinkEveryWord 設定</h1>
+          <h1 className="text-3xl font-bold">{chrome.i18n.getMessage("settingsTitle")}</h1>
           <p className="text-muted-foreground mt-2">
-            設定您的搜尋偏好和快速鍵
+            {chrome.i18n.getMessage("settingsDescription")}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>搜尋設定</CardTitle>
+            <CardTitle>{chrome.i18n.getMessage("searchSettings")}</CardTitle>
             <CardDescription>
-              設定後端API和查詢參數
+              {chrome.i18n.getMessage("searchSettingsDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="backend-url">後端網址</Label>
+              <Label htmlFor="backend-url">{chrome.i18n.getMessage("backendUrlLabel")}</Label>
               <Input
                 id="backend-url"
                 value={backendUrl}
@@ -134,26 +135,26 @@ function Options() {
                 placeholder="http://127.0.0.1:5000/search"
               />
               <p className="text-sm text-muted-foreground mt-1">
-                您的搜尋API端點
+                {chrome.i18n.getMessage("backendUrlDescription")}
               </p>
             </div>
 
             <div>
-              <Label>查詢參數（Key / Value）</Label>
-              <p className="text-sm text-muted-foreground mt-1">請使用 Key/Value 列表新增參數，值可以是字串或 JSON（如物件或陣列）；其中必須至少一個欄位包含 <code>{"{{QUERY}}"}</code> 用於被替換。</p>
+              <Label>{chrome.i18n.getMessage("queryParamsLabel")}</Label>
+              <p className="text-sm text-muted-foreground mt-1">{chrome.i18n.getMessage("queryParamsDescription")}</p>
               <div className="space-y-2 mt-2">
                 {kvEntries.map((entry, idx) => (
                   <div key={idx} className="flex gap-2">
                     <Input value={entry.key} onChange={(e) => updateEntry(idx, 'key', e.target.value)} placeholder="key" />
                     <Input value={entry.value} onChange={(e) => updateEntry(idx, 'value', e.target.value)} placeholder="value (string or JSON)" />
-                    <Button variant="destructive" onClick={() => removeEntry(idx)}>刪除</Button>
+                    <Button variant="destructive" onClick={() => removeEntry(idx)}>{chrome.i18n.getMessage("delete")}</Button>
                   </div>
                 ))}
 
                 <div className="flex gap-2">
                   <Input value={newKey} onChange={(e) => setNewKey(e.target.value)} placeholder="new key" />
                   <Input value={newValue} onChange={(e) => setNewValue(e.target.value)} placeholder="new value" />
-                  <Button onClick={addEntry}>新增</Button>
+                  <Button onClick={addEntry}>{chrome.i18n.getMessage("add")}</Button>
                 </div>
               </div>
             </div>
@@ -162,15 +163,15 @@ function Options() {
 
         <Card>
           <CardHeader>
-            <CardTitle>快速鍵設定</CardTitle>
+            <CardTitle>{chrome.i18n.getMessage("shortcutSettings")}</CardTitle>
             <CardDescription>
-              設定觸發搜尋的快速鍵
+              {chrome.i18n.getMessage("shortcutSettingsDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground">
-                使用Chrome內建的快捷鍵管理功能設定此擴充功能的快速鍵。
+                {chrome.i18n.getMessage("shortcutDescription")}
               </p>
               <div className="flex justify-center mt-4">
                 <Button
@@ -184,7 +185,7 @@ function Options() {
                     }
                   }}
                 >
-                  開啟Chrome快捷鍵設定頁面
+                  {chrome.i18n.getMessage("openShortcutsPage")}
                 </Button>
               </div>
             </div>
@@ -193,11 +194,35 @@ function Options() {
 
         <div className="flex justify-center">
           <Button onClick={saveSettings} size="lg">
-            儲存所有設定
+            {chrome.i18n.getMessage("saveSettings")}
           </Button>
         </div>
-        
         <div id="status" className="text-center text-sm"></div>
+
+
+        <div className="w-full flex flex-col md:flex-row items-center justify-center gap-3 py-2 text-xs text-muted-foreground border-t border-border/30">
+          <div className="flex items-center space-x-1">
+            <Github className="h-4 w-4" />
+            <a
+              href="https://github.com/mesak/LinkEveryWord"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              mesak/LinkEveryWord
+            </a>
+          </div>
+          
+          <div className="flex items-center space-x-1">
+            <Earth className="h-3 w-3" />
+            <span><a
+              href="https://mesak.tw"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >Mesak</a></span>
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -46,7 +46,9 @@
     ],
     "commands": {
       "open-search-panel": {
-        "suggested_key": { "default": "Ctrl+Shift+F" },
+        "suggested_key": {
+          "default": "Ctrl+Shift+F"
+        },
         "description": "Open LinkEveryWord search panel",
         "global": true
       }
@@ -54,6 +56,7 @@
     "side_panel": {
       "default_path": "sidepanel.html"
     },
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "default_locale": "en"
   }
 }

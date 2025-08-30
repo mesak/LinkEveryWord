@@ -1,0 +1,83 @@
+{
+  "appName": {
+    "message": "LinkEveryWord"
+  },
+  "appDescription": {
+    "message": "快速文字搜尋工具"
+  },
+  "selectedTextLabel": {
+    "message": "選取的文字"
+  },
+  "selectedTextPlaceholder": {
+    "message": "請在網頁上選取文字或在此輸入"
+  },
+  "searching": {
+    "message": "搜尋中..."
+  },
+  "searchAgain": {
+    "message": "重新搜尋"
+  },
+  "searchResults": {
+    "message": "搜尋結果"
+  },
+  "settingsTitle": {
+    "message": "LinkEveryWord 設定"
+  },
+  "settingsDescription": {
+    "message": "設定您的搜尋偏好和快速鍵"
+  },
+  "searchSettings": {
+    "message": "搜尋設定"
+  },
+  "searchSettingsDescription": {
+    "message": "設定後端API和查詢參數"
+  },
+  "backendUrlLabel": {
+    "message": "後端網址"
+  },
+  "backendUrlDescription": {
+    "message": "您的搜尋API端點"
+  },
+  "queryParamsLabel": {
+    "message": "查詢參數（Key / Value）"
+  },
+  "queryParamsDescription": {
+    "message": "請使用 Key/Value 列表新增參數，值可以是字串或 JSON（如物件或陣列）；其中必須至少一個欄位包含 {{QUERY}} 用於被替換。"
+  },
+  "delete": {
+    "message": "刪除"
+  },
+  "add": {
+    "message": "新增"
+  },
+  "shortcutSettings": {
+    "message": "快速鍵設定"
+  },
+  "shortcutSettingsDescription": {
+    "message": "設定觸發搜尋的快速鍵"
+  },
+  "shortcutDescription": {
+    "message": "使用Chrome內建的快捷鍵管理功能設定此擴充功能的快速鍵。"
+  },
+  "openShortcutsPage": {
+    "message": "開啟Chrome快捷鍵設定頁面"
+  },
+  "saveSettings": {
+    "message": "儲存所有設定"
+  },
+  "settingsSaved": {
+    "message": "設定已保存！"
+  },
+  "queryMustContainPlaceholder": {
+    "message": "查詢參數必須包含 {{QUERY}} 變數，才能在 SidePanel 中被替換。"
+  },
+  "invalidJson": {
+    "message": "查詢參數不是有效的 JSON，請修正後再儲存。"
+  },
+  "noResults": {
+    "message": "找不到搜尋結果"
+  },
+  "serverError": {
+    "message": "無法查詢伺服器"
+  }
+}

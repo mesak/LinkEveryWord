@@ -9,6 +9,7 @@ function SidePanel() {
   const [selectedText, setSelectedText] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [hasServerError, setHasServerError] = useState(false)
   // 內部解析後的參數物件
   const parseQueryParams = (text: string) => {
     try {
@@ -51,26 +52,29 @@ function SidePanel() {
 
     setIsLoading(true)
     setSearchResults([]) // 開始新搜尋前清空舊結果
+    setHasServerError(false) // 重置錯誤狀態
     try {
       // 從儲存中獲取最新設定
       const settings = await chrome.storage.sync.get({
         backendUrl: "http://127.0.0.1:5000/search", // 提供預設值
         queryKey: "query",
-        queryParams: JSON.stringify({ max_results: 50, query: "xxxx" })
+        queryParams: JSON.stringify({ max_results: 50, query: "{{QUERY}}" })
       })
+
       const { backendUrl, queryKey } = settings
+
       // 讀取並解析 query params
-      const rawParams = settings.queryParams || JSON.stringify({ max_results: 50, query: "xxxx" })
-      let params = parseQueryParams(rawParams) || { max_results: 50, query: "xxxx" }
+      const rawParams = settings.queryParams || JSON.stringify({ max_results: 50, query: "{{QUERY}}" })
+      let params = parseQueryParams(rawParams) || { max_results: 50, query: "{{QUERY}}" }
 
       // 如果使用者在 params 中放了 '{{QUERY}}'，則以該位置做替換；否則嘗試寫入 params.query
+
       const hasPlaceholder = containsPlaceholder(params)
       if (hasPlaceholder) {
         params = replacePlaceholder(params, textToSearch)
       } else {
         params.query = textToSearch
       }
-
 
       const response = await fetch(backendUrl, {
         method: "POST",
@@ -80,9 +84,11 @@ function SidePanel() {
 
       const data = await response.json()
       setSearchResults(data.results || [])
+      setHasServerError(false) // 清除錯誤狀態
     } catch (error) {
       console.error("Search error:", error)
       setSearchResults([])
+      setHasServerError(true) // 設置網路錯誤標記
     } finally {
       setIsLoading(false)
     }
@@ -114,16 +120,16 @@ function SidePanel() {
 
   return (
     <div className="w-full h-full bg-background flex flex-col overflow-hidden">
-      <div className="flex-1 p-2 overflow-y-auto">
+      <div className="flex-1 p-1 overflow-y-auto">
         <Card className="w-full h-full shadow-none border-0">
           <CardHeader className="pb-1">
-            <CardTitle className="text-lg">LinkEveryWord</CardTitle>
-            <CardDescription className="text-sm">快速文字搜尋工具</CardDescription>
+            <CardTitle className="text-lg">{chrome.i18n.getMessage("appName")}</CardTitle>
+            <CardDescription className="text-sm">{chrome.i18n.getMessage("appDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {/* 選中的文字 */}
             <div>
-              <Label htmlFor="selected-text" className="text-sm">選取的文字</Label>
+              <Label htmlFor="selected-text" className="text-sm">{chrome.i18n.getMessage("selectedTextLabel")}</Label>
               <Input
                 id="selected-text"
                 value={selectedText}
@@ -133,7 +139,7 @@ function SidePanel() {
                     handleSearch(selectedText)
                   }
                 }}
-                placeholder="請在網頁上選取文字或在此輸入"
+                placeholder={chrome.i18n.getMessage("selectedTextPlaceholder")}
                 className="text-sm py-1"
               />
             </div>
@@ -144,16 +150,16 @@ function SidePanel() {
               disabled={!selectedText.trim() || isLoading}
               className="w-full text-sm py-1"
             >
-              {isLoading ? "搜尋中..." : "重新搜尋"}
+              {isLoading ? chrome.i18n.getMessage("searching") : chrome.i18n.getMessage("searchAgain")}
             </Button>
 
             {/* 查詢參數請在 Options 中以 key/value 配置 */}
 
             {/* 搜尋結果 */}
-            {isLoading && <div className="text-center py-4">搜尋中...</div>}
-            {!isLoading && searchResults.length > 0 && (
+            {isLoading && <div className="text-center py-4">{chrome.i18n.getMessage("searching")}</div>}
+            {!isLoading && !hasServerError && searchResults.length > 0 && (
               <div className="space-y-2">
-                <Label className="text-sm">搜尋結果</Label>
+                <Label className="text-sm">{chrome.i18n.getMessage("searchResults")}</Label>
                 <div className="overflow-y-auto space-y-1">
                   {searchResults.map((result: any, index: number) => (
                     <div key={index} className="p-2 border rounded bg-white">
@@ -167,6 +173,16 @@ function SidePanel() {
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+            {!isLoading && !hasServerError && searchResults.length === 0 && selectedText.trim() && (
+              <div className="text-center py-4 text-muted-foreground">
+                {chrome.i18n.getMessage("noResults")}
+              </div>
+            )}
+            {!isLoading && hasServerError && (
+              <div className="text-center py-4 text-red-500">
+                {chrome.i18n.getMessage("serverError")}
               </div>
             )}
           </CardContent>
