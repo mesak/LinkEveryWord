@@ -2,5 +2,4 @@ node_modules/
 .wrangler/
 dist/
 **/.DS_Store
-src/content/privacy.ts
-src/content/privacy.*.ts
+_worker.bundle
