@@ -44,4 +44,5 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: ./web
           wranglerVersion: 'latest'
+          command: pages deploy ./dist --project-name=linkeveryword-web 
 
