@@ -1,0 +1,77 @@
+{
+  "appName": {
+    "message": "LinkEveryWord"
+  },
+  "appDescription": {
+    "message": "Quick text search tool"
+  },
+  "selectedTextLabel": {
+    "message": "Selected text"
+  },
+  "selectedTextPlaceholder": {
+    "message": "Select text on the webpage or enter here"
+  },
+  "searching": {
+    "message": "Searching..."
+  },
+  "searchAgain": {
+    "message": "Search again"
+  },
+  "searchResults": {
+    "message": "Search results"
+  },
+  "settingsTitle": {
+    "message": "LinkEveryWord Settings"
+  },
+  "settingsDescription": {
+    "message": "Configure your search preferences and shortcuts"
+  },
+  "searchSettings": {
+    "message": "Search Settings"
+  },
+  "searchSettingsDescription": {
+    "message": "Configure backend API and query parameters"
+  },
+  "backendUrlLabel": {
+    "message": "Backend URL"
+  },
+  "backendUrlDescription": {
+    "message": "Your search API endpoint"
+  },
+  "queryParamsLabel": {
+    "message": "Query Parameters (Key / Value)"
+  },
+  "queryParamsDescription": {
+    "message": "Use the Key/Value list to add parameters. Values can be strings or JSON (objects or arrays); at least one field must contain {{QUERY}} for replacement."
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "add": {
+    "message": "Add"
+  },
+  "shortcutSettings": {
+    "message": "Shortcut Settings"
+  },
+  "shortcutSettingsDescription": {
+    "message": "Configure shortcuts to trigger search"
+  },
+  "shortcutDescription": {
+    "message": "Use Chrome's built-in shortcut management to configure shortcuts for this extension."
+  },
+  "openShortcutsPage": {
+    "message": "Open Chrome Shortcuts Settings Page"
+  },
+  "saveSettings": {
+    "message": "Save All Settings"
+  },
+  "settingsSaved": {
+    "message": "Settings saved!"
+  },
+  "queryMustContainPlaceholder": {
+    "message": "Query parameters must contain the {{QUERY}} variable to be replaced in SidePanel."
+  },
+  "invalidJson": {
+    "message": "Query parameters are not valid JSON, please correct and save."
+  }
+}
