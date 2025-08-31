@@ -1,0 +1,7 @@
+{
+  // Cloudflare recommends wrangler.jsonc
+  "name": "linkeveryword-web",
+  "compatibility_date": "2025-08-31",
+  // Cloudflare Pages: deploy the project root as static assets alongside Functions
+  "pages_build_output_dir": "./dist"
+}
