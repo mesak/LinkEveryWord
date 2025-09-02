@@ -1,4 +1,3 @@
-import "../style.css"
 import type { PlasmoCSConfig } from "plasmo"
 
 export const config: PlasmoCSConfig = {
@@ -10,7 +9,7 @@ export const config: PlasmoCSConfig = {
 let shortcutKeys = {
   ctrl: true,
   shift: true,
-  key: "L"
+  key: "F"
 }
 
 // 載入用戶設定

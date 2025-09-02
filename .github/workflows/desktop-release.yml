@@ -1,0 +1,87 @@
+name: Desktop App Release
+
+on:
+  push:
+    tags:
+      - 'desktop-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build and Release (Windows)
+    runs-on: windows-latest
+
+    env:
+      PYTHONUTF8: '1'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install build dependencies
+        shell: pwsh
+        working-directory: desktop-app
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build with PyInstaller
+        shell: pwsh
+        working-directory: desktop-app
+        run: |
+          # Clean previous outputs if any
+          if (Test-Path build) { Remove-Item -Recurse -Force build }
+          if (Test-Path dist)  { Remove-Item -Recurse -Force dist }
+          python -m PyInstaller --clean app_standalone.spec
+
+      - name: Prepare release artifacts
+        id: prep
+        shell: pwsh
+        working-directory: desktop-app
+        run: |
+          $tag = "$env:GITHUB_REF_NAME"  # e.g. desktop-v0.0.1
+          $version = $tag -replace '^desktop-v',''
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+          # Ensure output exists
+          if (!(Test-Path 'dist/EverythingFlaskSearch.exe')) {
+            Write-Error 'dist/EverythingFlaskSearch.exe not found after build.'
+          }
+          # Create versioned zip
+          $zipName = "EverythingFlaskSearch-$version-win64.zip"
+          Compress-Archive -Path 'dist/EverythingFlaskSearch.exe' -DestinationPath $zipName -Force
+          echo "zip=$zipName" >> $env:GITHUB_OUTPUT
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EverythingFlaskSearch-${{ steps.prep.outputs.version }}-windows
+          path: |
+            desktop-app/dist/EverythingFlaskSearch.exe
+            desktop-app/${{ steps.prep.outputs.zip }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Desktop App ${{ steps.prep.outputs.version }}
+          body: |
+            Automated release for desktop app.
+            Version: ${{ steps.prep.outputs.version }}
+
+            Notes:
+            - Executable: EverythingFlaskSearch.exe
+            - Zip: EverythingFlaskSearch-${{ steps.prep.outputs.version }}-win64.zip
+          draft: false
+          prerelease: false
+          files: |
+            desktop-app/dist/EverythingFlaskSearch.exe
+            desktop-app/${{ steps.prep.outputs.zip }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
