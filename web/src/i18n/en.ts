@@ -15,12 +15,12 @@ export const en: Dict = {
     },
   },
   chrome: {
-    title: 'Chrome extension installation',
+    title: 'Chrome Extension Installation',
+    installFromStore: 'Install from Chrome Web Store',
     steps: [
-      'Install Node.js (18+).',
-      'In chrome-extension folder run npm install and npm run build.',
-      'Open Chrome → More tools → Extensions → Enable Developer mode.',
-      'Click Load unpacked and select chrome-extension/build/chrome-mv3-dev.',
+      'Click the "Install from Chrome Web Store" button below.',
+      'On the Chrome Store page that opens, click "Add to Chrome".',
+      'After installation, we recommend pinning the extension to your toolbar for quick access.'
     ],
     usageTitle: 'Basic usage',
     usageItems: [
