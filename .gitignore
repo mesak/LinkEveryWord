@@ -1,4 +1,5 @@
 ﻿# LinkEveryWord .gitignore
+.env
 
 # Python
 __pycache__/
