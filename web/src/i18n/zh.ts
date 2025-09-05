@@ -24,7 +24,7 @@ export const zh: Dict = {
     ],
     usageTitle: '基本使用',
     usageItems: [
-      '選取網頁文字，按下預設快捷鍵 Ctrl+Shift+L（可自訂）。',
+      '選取網頁文字，按下預設快捷鍵 Ctrl+Shift+F（可自訂）。',
       '側邊面板會顯示由你設定後端所回傳的結果。',
       '前往「擴充圖示 → 設定」可自訂：後端 API、查詢鍵、快捷鍵。',
     ],

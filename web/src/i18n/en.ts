@@ -24,7 +24,7 @@ export const en: Dict = {
     ],
     usageTitle: 'Basic usage',
     usageItems: [
-      'Select text on a page and press Ctrl+Shift+L (customizable).',
+      'Select text on a page and press Ctrl+Shift+F (customizable).',
       'The side panel shows results from your configured backend.',
       'Open extension settings to configure backend API, query key, shortcuts.',
     ],
