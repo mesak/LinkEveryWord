@@ -5,6 +5,10 @@ on:
     tags:
       - 'chrome-v*'
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   upload:
     name: "Build and Upload to Chrome Store"
