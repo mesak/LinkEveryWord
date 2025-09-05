@@ -47,11 +47,11 @@
   --ring: 224.3 76.3% 94.1%;
 }
 
-* {
+.lew-extension-root * {
   border-color: hsl(var(--border));
 }
 
-body {
+.lew-extension-root {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
 }

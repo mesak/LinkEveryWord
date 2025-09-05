@@ -1,0 +1,54 @@
+name: "Upload Chrome Extension to Store"
+
+on:
+  push:
+    tags:
+      - 'chrome-v*'
+
+jobs:
+  upload:
+    name: "Build and Upload to Chrome Store"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: chrome-extension
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: chrome-extension/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check if build exists
+        id: check_build
+        run: |
+          if [ -f "build/chrome-mv3-prod.zip" ]; then
+            echo "build_exists=true" >> $GITHUB_OUTPUT
+            echo "Build exists, skipping build steps"
+          else
+            echo "build_exists=false" >> $GITHUB_OUTPUT
+            echo "Build does not exist, will build"
+          fi
+
+      - name: Build the extension
+        if: steps.check_build.outputs.build_exists == 'false'
+        run: npm run build
+
+      - name: Package the extension into a zip artifact
+        if: steps.check_build.outputs.build_exists == 'false'
+        run: npm run package
+
+      - name: Upload to Chrome Web Store
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          file-path: chrome-extension/build/chrome-mv3-prod.zip
+          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}

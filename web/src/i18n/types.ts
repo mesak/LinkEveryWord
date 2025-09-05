@@ -13,6 +13,7 @@ export interface Dict {
   }
   chrome: {
     title: string
+    installFromStore: string
     steps: string[]
     usageTitle: string
     usageItems: string[]

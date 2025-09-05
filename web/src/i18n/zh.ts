@@ -16,15 +16,15 @@ export const zh: Dict = {
   },
   chrome: {
     title: 'Chrome 擴充功能安裝教學',
+    installFromStore: '從 Chrome 線上應用程式商店安裝',
     steps: [
-      '在本機安裝 Node.js（18+）。',
-      '在專案根目錄的 chrome-extension 內執行 npm install 與 npm run build。',
-      '開啟 Chrome → 更多工具 → 擴充功能 → 打開「開發人員模式」。',
-      '點選「載入未封裝項目」，選取 chrome-extension/build/chrome-mv3-dev 目錄。',
+      '點擊下方的「從 Chrome 線上應用程式商店安裝」按鈕。',
+      '在彈出的 Chrome 商店頁面中，點擊「加到 Chrome」。',
+      '安裝完成後，建議將擴充功能釘選到工具列以便快速存取。'
     ],
     usageTitle: '基本使用',
     usageItems: [
-      '選取網頁文字，按下預設快捷鍵 Ctrl+Shift+L（可自訂）。',
+      '選取網頁文字，按下預設快捷鍵 Ctrl+Shift+F（可自訂）。',
       '側邊面板會顯示由你設定後端所回傳的結果。',
       '前往「擴充圖示 → 設定」可自訂：後端 API、查詢鍵、快捷鍵。',
     ],

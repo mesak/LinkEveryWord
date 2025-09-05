@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import type { Context } from 'hono'
+import { serveStatic } from 'hono/cloudflare-pages'
 import { html, raw } from 'hono/html'
 import { marked } from 'marked'
 // Use generated TS content files (created by postinstall sync script)
@@ -12,6 +13,9 @@ import { en } from '../src/i18n/en'
 import type { Dict } from '../src/i18n/types'
 
 const app = new Hono()
+
+// Serve static assets from the `/assets` directory
+app.use('/assets/*', serveStatic())
 
 const getLang = (c: Context): { dict: Dict; code: 'zh' | 'en' } => {
   const url = new URL(c.req.url)
@@ -128,12 +132,18 @@ app.get('/', (c: Context) => {
 
 app.get('/install/chrome', (c: Context) => {
   const { dict, code } = getLang(c)
+  const storeUrl = `https://chromewebstore.google.com/detail/linkeveryword-extension/lkpkimhpldonggkkcoidicbeembcpemj?hl=${code}`
   return Layout(
     c,
     html`<h1>${dict.chrome.title}</h1>
     <ol>
       ${dict.chrome.steps.map((s) => html`<li>${s}</li>`)}
     </ol>
+    <div style="text-align: center; margin: 2.5rem 0;">
+      <a href="${storeUrl}" class="btn" target="_blank" rel="noopener noreferrer" style="padding:12px 18px; font-size:16px;">
+        ${dict.chrome.installFromStore}
+      </a>
+    </div>
     <div class="card">
       <h2>${dict.chrome.usageTitle}</h2>
       <ul>
