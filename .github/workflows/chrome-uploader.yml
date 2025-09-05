@@ -25,10 +25,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check if build exists
+        id: check_build
+        run: |
+          if [ -f "build/chrome-mv3-prod.zip" ]; then
+            echo "build_exists=true" >> $GITHUB_OUTPUT
+            echo "Build exists, skipping build steps"
+          else
+            echo "build_exists=false" >> $GITHUB_OUTPUT
+            echo "Build does not exist, will build"
+          fi
+
       - name: Build the extension
+        if: steps.check_build.outputs.build_exists == 'false'
         run: npm run build
 
       - name: Package the extension into a zip artifact
+        if: steps.check_build.outputs.build_exists == 'false'
         run: npm run package
 
       - name: Upload to Chrome Web Store
