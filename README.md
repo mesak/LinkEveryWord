@@ -3,7 +3,7 @@
 <p align="center"><img src="shared/image.png" width="100%"></p>
 
 <p align="center">
-  <a href="./README_ZH.md">简体中文</a>
+  <a href="./README_ZH.md">中文</a>
 </p>
 
 **LinkEveryWord** is a comprehensive file search and link management solution designed to help you efficiently find and manage your digital files. This project includes a powerful desktop search application, a seamlessly integrated browser extension, and a web platform that is still in the planning stages.
