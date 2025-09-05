@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import type { Context } from 'hono'
+import { serveStatic } from 'hono/cloudflare-pages'
 import { html, raw } from 'hono/html'
 import { marked } from 'marked'
 // Use generated TS content files (created by postinstall sync script)
@@ -12,6 +13,9 @@ import { en } from '../src/i18n/en'
 import type { Dict } from '../src/i18n/types'
 
 const app = new Hono()
+
+// Serve static assets from the `/assets` directory
+app.use('/assets/*', serveStatic())
 
 const getLang = (c: Context): { dict: Dict; code: 'zh' | 'en' } => {
   const url = new URL(c.req.url)
