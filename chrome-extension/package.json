@@ -1,7 +1,7 @@
 {
   "name": "link-every-word-extension",
   "displayName": "LinkEveryWord Extension",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Chrome extension for quick text search and linking",
   "author": "Mesak <mesakey@gmail.com>",
   "scripts": {
