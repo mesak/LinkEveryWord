@@ -1,16 +1,13 @@
-name: "Chrome Extension Release"
+name: "Upload Chrome Extension to Store"
 
 on:
   push:
     tags:
       - 'chrome-v*'
 
-permissions:
-  contents: write
-
 jobs:
-  build-and-release:
-    name: "Build and Release Chrome Extension"
+  upload:
+    name: "Build and Upload to Chrome Store"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,38 +25,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Extract version from tag and sync to package.json
-        id: sync_version
-        shell: bash
-        run: |
-          TAG="${GITHUB_REF##*/}"
-          VERSION="${TAG#chrome-v}"
-          echo "Tag: $TAG"
-          echo "Parsed version: $VERSION"
-          if [[ ! "$VERSION" =~ ^[0-9]+(\.[0-9]+){2,3}$ ]]; then
-            echo "Invalid version format for Chrome (expect x.y.z or x.y.z.w): $VERSION"
-            exit 1
-          fi
-          npm version "$VERSION" --no-git-tag-version --allow-same-version
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
       - name: Build the extension
         run: npm run build
 
       - name: Package the extension into a zip artifact
         run: npm run package
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload to Chrome Web Store
+        uses: mnao305/chrome-extension-upload@v5.0.0
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Chrome Extension v${{ steps.sync_version.outputs.version }}
-          body: |
-            ## LinkEveryWord Chrome Extension v${{ steps.sync_version.outputs.version }}
-
-            This is an automated release of the LinkEveryWord Chrome Extension.
-          draft: false
-          prerelease: false
-          files: chrome-extension/build/chrome-mv3-prod.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          file-path: chrome-extension/build/chrome-mv3-prod.zip
+          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
