@@ -29,6 +29,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Initialize Plasmo
+        run: |
+          # 確保 Plasmo 正確初始化
+          npx plasmo dev --build-type=dev || true
+          # 等待 Plasmo 生成必要的文件
+          sleep 5
+
       - name: Check if build exists
         id: check_build
         run: |
