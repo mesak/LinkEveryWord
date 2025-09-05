@@ -13,8 +13,10 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# NOTE: do not ignore chrome-extension/lib (contains source)
+# If you need to ignore Python virtual env libs, use site-specific patterns instead.
+# lib/
+# lib64/
 parts/
 sdist/
 var/
