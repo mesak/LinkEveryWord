@@ -1,156 +1,194 @@
-﻿﻿#  LinkEveryWord Desktop App
+﻿﻿# LinkEveryWord Desktop Application
 
-<p align="center"><img src="../image.png" width="128"></p>
+<p align="center"><img src="../shared/image.png" width="128"></p>
 
-基於 voidtools Everything 搜尋引擎的桌面應用程式，提供強大的本地檔案搜尋功能。
+A high-performance Windows desktop application that provides lightning-fast local file search capabilities powered by the voidtools Everything search engine.
 
-##  主要功能
+## Key Features
 
--  **即時搜尋**: 基於 Everything SDK 的毫秒級檔案搜尋
--  **彈性備援機制**: 自動在 Everything、Windows Search 和示範模式之間切換
--  **Web 介面**: 現代化的響應式 Web 操作介面
--  **獨立執行**: 15MB 的單一執行檔，無需安裝
--  **高度可配置**: 透過 `config.yml` 檔案自訂服務器和應用程式行為
--  **示範模式**: 即使沒有 Everything 也能體驗功能
--  **單實例保護**: 改用基於文件鎖的機制，確保只有一個應用程式實例在運行
--  **完整日誌系統**: 支援多級別、文件輪轉和控制台輸出 (詳見 LOGGER_GUIDE.md)
--  **中文支援**: 完整的繁體中文介面
--  **萬用字元**: 支援 *.txt, *.pdf 等搜尋模式
--  **詳細資訊**: 顯示檔案大小、修改時間等詳細資訊
+- **⚡ Millisecond Search**: Lightning-fast file search powered by Everything SDK
+- **🔄 Smart Fallback**: Automatic switching between Everything, Windows Search, and demo modes
+- **🌐 Modern Web UI**: Responsive web-based interface with real-time results
+- **📦 Portable**: Single 15MB executable with zero installation requirements
+- **⚙️ Highly Configurable**: Comprehensive customization via `config.yml`
+- **🎯 Demo Mode**: Full functionality preview without Everything dependency
+- **🔒 Instance Protection**: File-lock based single instance management
+- **📊 Advanced Logging**: Multi-level logging with rotation and console output
+- **🌍 Internationalization**: Full Traditional Chinese interface support
+- **🔍 Wildcard Support**: Advanced pattern matching (*.txt, *.pdf, etc.)
+- **📋 Rich Metadata**: File size, modification time, and detailed information display
 
-##  快速開始
+## Quick Start
 
-### 方法一：直接執行 (推薦)
-`ash
-# 下載並執行
-dist/EverythingFlaskSearch.exe
-`
+### Production Use (Recommended)
+```bash
+# Download and run the standalone executable
+./dist/EverythingFlaskSearch.exe
+```
+The application will automatically open your default browser and display the search interface.
 
-### 方法二：開發模式
-`ash
-# 安裝 Python 3.13+
-pip install flask flask-cors
+### Development Mode
+```bash
+# Prerequisites: Python 3.13+
+pip install -r requirements.txt
 
-# 執行開發版本
+# Run development server
 python app_standalone.py
-`
+```
 
-##  系統需求
+## System Requirements
 
-- **作業系統**: Windows 10/11
-- **Everything**: 建議安裝 voidtools Everything (非必需，有示範模式)
-- **瀏覽器**: Chrome, Firefox, Edge 等現代瀏覽器
-- **記憶體**: 至少 50MB 可用記憶體
+- **Operating System**: Windows 10/11 (64-bit)
+- **Everything**: voidtools Everything (recommended, not required)
+- **Browser**: Chrome, Firefox, Edge, or any modern browser
+- **Memory**: Minimum 50MB available RAM
+- **Disk Space**: 20MB for installation
 
-##  建置說明
+## Usage
 
-### 重新打包
-`ash
-# 使用 PyInstaller 重新打包
-python -m PyInstaller app_standalone.spec --clean
-`
+### Basic Operations
+1. **Launch Application**: Run `EverythingFlaskSearch.exe` - browser opens automatically
+2. **Search Files**: Enter keywords in the search box
+   - Supports filename, path, and extension searches
+   - Use wildcards like `*.txt` for specific file types
+3. **View Results**: Click filenames to open files, view metadata, and explore paths
 
-### 專案結構
-`
+### Advanced Search Patterns
+```bash
+# File type search
+*.pdf *.docx
+
+# Path-based search
+folder:documents
+
+# Size-based search (if supported by backend)
+size:>1MB
+
+# Date-based search
+modified:today
+```
+
+## Project Structure
+
+```
 desktop-app/
- app_standalone.py          # 主應用程式入口
- config.yml                 # 應用程式配置文件
- CONFIG.md                  # 配置文件說明文件
- LOGGER_GUIDE.md            # 日誌系統說明文件
- utils/                     # 核心模組
-     ...                    # (包含 Everything, Windows Search 等 SDK 模組)
- templates/                 # Web 介面模板
- static/                    # 靜態檔案 (CSS, JS)
- build.bat                  # 自動打包腳本
- create_release.bat         # 發布包建立腳本
- version_info.txt           # 執行檔版本資訊
- app_standalone.spec        # PyInstaller 打包規格
- dist/                      # 打包輸出目錄
-     EverythingFlaskSearch.exe  # 主執行檔
-`
+├── app_standalone.py          # Main application entry point
+├── config.yml                 # Application configuration
+├── requirements.txt           # Python dependencies
+├── utils/                     # Core modules and SDKs
+│   ├── everything_sdk.py      # Everything search integration
+│   ├── windows_search.py      # Windows Search fallback
+│   └── demo_mode.py          # Demo mode implementation
+├── templates/                 # Jinja2 web interface templates
+├── static/                   # Static assets (CSS, JS, images)
+├── build.bat                 # Automated build script
+├── app_standalone.spec       # PyInstaller build specification
+└── dist/                     # Build output directory
+    └── EverythingFlaskSearch.exe
+```
 
-##  使用說明
+## Technology Stack
 
-1. **啟動應用程式**
-   - 執行 EverythingFlaskSearch.exe
-   - 應用程式會自動開啟瀏覽器
+- **Backend**: Python 3.13 + Flask framework
+- **Frontend**: Modern HTML5 + CSS3 + Vanilla JavaScript
+- **Search Engine**: voidtools Everything SDK integration
+- **CORS Support**: Flask-CORS for cross-origin requests
+- **Packaging**: PyInstaller 6.15.0 for executable generation
+- **Configuration**: YAML-based configuration management
 
-2. **搜尋檔案**
-   - 在搜尋框輸入關鍵字
-   - 支援檔名、路徑、副檔名搜尋
-   - 使用 *.txt 搜尋特定類型檔案
+## API Documentation
 
-3. **檢視結果**
-   - 點擊檔案名稱開啟檔案
-   - 檢視檔案大小、修改時間等詳細資訊
-   - 查看完整檔案路徑
-
-##  技術架構
-
-- **後端**: Python 3.13 + Flask
-- **前端**: HTML5 + CSS3 + JavaScript
-- **搜尋引擎**: voidtools Everything SDK
-- **跨域支援**: Flask-CORS
-- **打包工具**: PyInstaller 6.15.0
-
-##  問題排除
-
-### Everything 未安裝
-- 應用程式會自動切換到示範模式
-- 顯示模擬搜尋結果供測試
-
-### 執行檔無法啟動
-- 確認 Windows Defender 沒有阻擋
-- 檢查是否有足夠的記憶體空間
-- 嘗試以管理員身份執行
-
-### 搜尋結果為空
-- 確認 Everything 服務正在運行
-- 檢查搜尋關鍵字是否正確
-- 訪問 /status 端點檢查狀態
-
-##  API 文件
-
-### 搜尋 API
-`
+### Search Endpoints
+```http
+# POST search with JSON payload
 POST /search
+Content-Type: application/json
+
 {
-  "query": "搜尋關鍵字",
+  "query": "search keywords",
   "max_results": 50
 }
-`
 
-### 狀態檢查
-`
-GET /status
-`
-
-### RESTful 搜尋
-`
+# GET search with query parameters
 GET /api/search/{query}?limit=50
-`
 
-## ⚙️ 設定與自訂化
+# Status check
+GET /status
+```
 
-本應用程式支援透過 `config.yml` 檔案進行高度自訂化。如果 `config.yml` 不存在，應用程式在首次啟動時會自動創建一份預設的配置文件。
+### Response Format
+```json
+{
+  "results": [
+    {
+      "name": "filename.txt",
+      "path": "C:\\Users\\Documents\\filename.txt",
+      "size": 1024,
+      "modified": "2024-01-01T12:00:00Z"
+    }
+  ],
+  "total": 1,
+  "engine": "everything"
+}
+```
 
-您可以自訂的項目包括：
-- **服務器設定**: `host`, `port`, `debug` 模式等。
-- **應用程式行為**: `browser_delay` (瀏覽器自動開啟延遲時間)。
-- **日誌系統**: `level`, `filename`, `max_size` 等。
+## Configuration
 
-詳細的配置選項和說明，請參考 **CONFIG.md** 和 **LOGGER_GUIDE.md** 文件。
+The application supports extensive customization via `config.yml`. If the file doesn't exist, a default configuration is created on first launch.
 
-##  版本歷史
+### Configurable Options
+- **Server Settings**: `host`, `port`, `debug` mode
+- **Application Behavior**: `browser_delay`, auto-open settings
+- **Logging System**: `level`, `filename`, `max_size`, rotation
 
-- **v2.1 (功能增強)**: 新增 `config.yml` 配置文件、備用搜尋引擎、日誌系統並重構專案結構。
-- **v2.0**: 性能優化版本，實例預載入
-- **v1.0**: 初始版本，基本搜尋功能
+For detailed configuration options, see [CONFIG.md](CONFIG.md) and [LOGGER_GUIDE.md](LOGGER_GUIDE.md).
 
-##  貢獻
+## Building from Source
 
-歡迎提交 Issue 和 Pull Request！
+### Prerequisites
+```bash
+# Install Python 3.13+
+# Install required packages
+pip install -r requirements.txt
+```
 
----
+### Build Process
+```bash
+# Create executable
+python -m PyInstaller app_standalone.spec --clean
 
-**LinkEveryWord Desktop App** - 讓檔案搜尋變得簡單高效 
+# Or use the build script
+./build.bat
+```
+
+## Troubleshooting
+
+### Everything Not Installed
+- Application automatically switches to demo mode
+- Displays simulated search results for testing
+
+### Executable Won't Start
+- Check Windows Defender exclusions
+- Verify sufficient memory availability
+- Try running as administrator
+- Check antivirus software interference
+
+### Empty Search Results
+- Ensure Everything service is running
+- Verify search keywords are correct
+- Visit `/status` endpoint to check system status
+- Check Everything database indexing status
+
+## Contributing
+
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+MIT License - see [LICENSE](../LICENSE) for details.

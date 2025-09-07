@@ -6,78 +6,49 @@
   <a href="./README.md">English</a>
 </p>
 
-**LinkEveryWord** 是一個全面的檔案搜尋與連結管理解決方案，旨在幫助您高效地尋找並管理您的數位檔案。本專案包含一個功能強大的桌面搜尋應用程式、一個無縫整合的瀏覽器擴充功能，以及一個仍在規劃中的 Web 平台。
+**LinkEveryWord** 是一個強大的跨平台檔案搜尋生態系統，提供閃電般快速的檔案發現和無縫的文字到檔案連結功能。採用現代網頁技術構建，在桌面和瀏覽器環境中提供即時搜尋能力。
 
-## 專案元件
+## 核心功能
 
-本專案由三個主要元件組成，各自擁有不同的用途：
+- **⚡ 閃電搜尋**: 基於 Everything SDK 的毫秒級檔案搜尋
+- **🌐 瀏覽器整合**: 在網頁上選取任何文字即可搜尋本機檔案
+- **🖥️ 跨平台**: 在 Windows 桌面和 Chrome 瀏覽器間無縫運作
+- **🎯 智慧備援**: 當 Everything 不可用時自動切換到 Windows 搜尋
+- **🔧 高度可配置**: 可自訂搜尋參數和介面偏好設定
+- **📱 現代介面**: 採用現代網頁技術構建的簡潔響應式介面
 
-### 🖥️ 桌面應用程式 (已完成)
+## 專案組成
 
-**位置**: [`/desktop-app/`](./desktop-app/)
-**技術**: `Python` `Flask` `Everything SDK` `PyInstaller`
-**描述**: 一個功能強大的 Windows 桌面應用程式，由 Everything SDK 驅動，提供即時的本機檔案搜尋功能。它具備現代化的網頁操作介面，並可作為獨立的執行檔運行。
+本專案包含兩個主要組件：
 
-詳細資訊請參閱 [桌面應用程式 README](./desktop-app/README.md)。
+### 🖥️ 桌面應用程式
+高效能 Windows 桌面應用程式，基於 Everything SDK 提供即時本機檔案搜尋。具備現代網頁介面，以獨立執行檔運行。
 
-### 🌐 Chrome 擴充功能 (已完成)
+### 🌐 Chrome 擴充功能
+瀏覽器擴充功能，可在任何網頁上選取文字並即時搜尋檔案。結果顯示在優雅的側邊面板中，支援自訂後端整合。
 
-**位置**: [`/chrome-extension/`](./chrome-extension/)
-**技術**: `React` `TypeScript` `shadcn/ui` `Plasmo`
-**描述**: 一個 Chrome 瀏覽器擴充功能，讓您可以在任何網頁上選取文字，並使用可自訂的後端（例如 LinkEveryWord 桌面應用程式）進行即時搜尋。搜尋結果會顯示在一個簡潔的側邊面板中。
+## 安裝
 
-詳細資訊請參閱 [Chrome 擴充功能 README](./chrome-extension/README.md)。
+### 🚀 快速開始
 
-### ☁️ Web 應用程式 (已完成)
+#### Chrome 擴充功能
+直接從 Chrome 線上應用程式商店安裝：
+**[安裝 Chrome 擴充功能 →](https://chrome.google.com/webstore/detail/lkpkimhpldonggkkcoidicbeembcpemj)**
 
-**位置**: [`/web/`](./web/)
-**技術**: `Cloudflare Pages` `Hono` `TypeScript`
-**描述**: 一個靜態網站，用於介紹本專案、提供 Chrome 擴充功能和桌面應用程式的安裝指南，並託管隱私權政策頁面。
+#### 桌面應用程式
+下載最新版本：
+**[從 GitHub Releases 下載 →](https://github.com/mesak/LinkEveryWord/releases)**
 
-詳細資訊請參閱 [Web 應用程式 README](./web/README.md)。
+### 系統需求
+- **桌面應用程式**: Windows 10/11
+- **Chrome 擴充功能**: Chrome 瀏覽器
 
-## 開發狀態
+## 開發
 
-| 元件               | 狀態        | 進度 | 描述                                         |
-| ------------------ | ----------- | -------- | --------------------------------------------------- |
-| **桌面應用程式**   | `v1.0.0`    | 100%     | 核心功能穩定，並已提供發行版本。                   |
-| **Chrome 擴充功能** | `v0.0.1`    | 100%     | 功能完備，可用於開發與建置。                       |
-| **Web 應用程式**   | `v0.1.0`    | 100%     | 用於專案介紹與指南的靜態網站。               |
+對於想要貢獻或修改程式碼的開發者，請參閱各組件的詳細文件：
 
-## 快速入門
-
-### 桌面應用程式
-
-1.  前往 `desktop-app/dist` 目錄。
-2.  執行 `EverythingFlaskSearch.exe` 執行檔。
-3.  您的瀏覽器將會自動開啟並顯示搜尋介面。
-
-若需進行開發：
-```bash
-# 開發模式
-cd desktop-app
-pip install flask flask-cors
-python app_standalone.py
-```
-
-### Chrome 擴充功能
-
-1.  前往 `chrome-extension` 目錄。
-2.  安裝依賴套件: `npm install`
-3.  啟動開發伺服器: `npm run dev`
-4.  在 Chrome 中，從 `build/chrome-mv3-dev` 目錄載入未封裝的擴充功能。
-
-### Web 應用程式
-
-Web 應用程式目前尚未進入開發階段。
-
-## 貢獻指南
-
-1.  Fork 本專案。
-2.  建立您的功能分支 (`git checkout -b feature/AmazingFeature`)。
-3.  提交您的變更 (`git commit -m 'Add some AmazingFeature'`)。
-4.  將分支推送到遠端 (`git push origin feature/AmazingFeature`)。
-5.  開啟一個 Pull Request。
+- **桌面應用程式**: 請參閱 [`/desktop-app/README.md`](./desktop-app/README.md)
+- **Chrome 擴充功能**: 請參閱 [`/chrome-extension/README.md`](./chrome-extension/README.md)
 
 ## 授權
 

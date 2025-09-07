@@ -1,55 +1,135 @@
-# LinkEveryWord Web (Cloudflare Pages + Hono)
+# LinkEveryWord Web Platform
 
-This site introduces the project, provides install guides for the Chrome extension and Desktop app, and hosts the Privacy Policy page.
+A modern, multilingual web platform built with Cloudflare Pages and Hono that serves as the central hub for LinkEveryWord project documentation, installation guides, and privacy policies.
 
-## Develop locally
+## Features
 
-Prereqs:
+- **🌍 Multilingual Support**: Seamless language switching between English and Traditional Chinese
+- **📱 Responsive Design**: Mobile-first approach with modern UI components
+- **⚡ Edge Performance**: Powered by Cloudflare Pages for global low-latency delivery
+- **🔒 Privacy Compliant**: Comprehensive privacy policy management and hosting
+- **📖 Documentation Hub**: Centralized installation guides and project information
+- **🎨 Modern Stack**: Built with Hono framework and TypeScript for type safety
+
+## Architecture
+
+### Technology Stack
+- **Framework**: Hono (lightweight web framework)
+- **Runtime**: Cloudflare Workers/Pages Functions
+- **Language**: TypeScript for type safety
+- **Deployment**: Cloudflare Pages with automatic CI/CD
+- **Routing**: File-based routing with dynamic language support
+
+### Route Structure
+```
+/                    # Project homepage
+/install/chrome      # Chrome extension installation guide
+/install/desktop     # Desktop application installation guide
+/privacy             # Privacy policy page
+```
+
+## Development
+
+### Prerequisites
 - Node.js 18+
-- Internet access (Wrangler bootstraps)
+- Internet access (for Wrangler bootstrapping)
+- Cloudflare account (for deployment)
 
-Steps:
-
-```powershell
+### Local Development
+```bash
+# Clone and setup
 cd web
 npm install
+
+# Start development server
 npm run dev
+
+# Open browser to displayed URL (e.g., http://localhost:8788)
 ```
 
-Open the URL shown by Wrangler (e.g. http://localhost:8788).
+### Language Switching
+Access different languages via URL parameters:
+```bash
+# Traditional Chinese (default)
+http://localhost:8788/?lang=zh
+http://localhost:8788/install/chrome?lang=zh
 
-## Deploy to Cloudflare Pages
+# English
+http://localhost:8788/?lang=en
+http://localhost:8788/install/desktop?lang=en
+```
 
-```powershell
-cd web
+## Content Management
+
+### Privacy Policy System
+The platform features an automated privacy policy management system:
+
+**Source Files** (in `web/content/`):
+- `privacy-policy.md` (Traditional Chinese)
+- `privacy-policy.en.md` (English)
+
+**Generated Files** (auto-generated):
+- `src/content/privacy.zh.ts`
+- `src/content/privacy.en.ts`
+
+**Sync Process**:
+```bash
+# Sync privacy policies from markdown to TypeScript
+npm run sync:privacy
+```
+
+### Asset Management
+Shared assets are automatically synchronized:
+```bash
+# Asset mapping
+shared/app_icon.svg → web/assets/logo.svg
+shared/image.png → web/assets/image.png
+
+# Sync assets
+npm run sync:assets
+```
+
+## Deployment
+
+### Cloudflare Pages Deployment
+```bash
+# Deploy to production
 npm run deploy
+
+# Preview deployment
+npm run preview
 ```
 
-Notes:
-- Uses Pages Functions via `functions/[[path]].ts` with Hono.
-- Routes: `/`, `/install/chrome`, `/install/desktop`, `/privacy`.
+### Configuration
+The platform uses Cloudflare Pages Functions via `functions/[[path]].ts` with Hono for:
+- Dynamic routing
+- Language detection
+- Content serving
+- API endpoints
 
-### 多語系切換
+## Project Structure
 
-- 透過網址參數 `?lang=zh` 或 `?lang=en` 切換語言，例如：
-	- `http://localhost:8788/?lang=zh`
-	- `http://localhost:8788/install/chrome?lang=en`
+```
+web/
+├── src/
+│   ├── content/           # Generated content files
+│   ├── components/        # Reusable UI components
+│   └── utils/            # Utility functions
+├── functions/
+│   └── [[path]].ts       # Cloudflare Pages Functions entry
+├── content/              # Source markdown files
+├── assets/               # Static assets
+└── package.json          # Dependencies and scripts
+```
 
-## Privacy Policy
+## Contributing
 
-- Canonical files live in `web/content/`:
-	- `web/content/privacy-policy.md` (zh)
-	- `web/content/privacy-policy.en.md` (en)
-- On install or `npm run sync:privacy`, these are converted into:
-	- `src/content/privacy.zh.ts` and `src/content/privacy.en.ts`
-	- If an English version is missing, zh content is used as fallback.
-
-## Assets
-
-- The sync script copies shared assets into `web/assets/`:
-	- `shared/app_icon.svg` → `assets/logo.svg` (favicon and header logo)
-	- `shared/image.png` → `assets/image.png` (home hero image)
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test locally with `npm run dev`
+5. Submit a pull request
 
 ## License
 
-MIT
+MIT License - see [LICENSE](../LICENSE) for details.

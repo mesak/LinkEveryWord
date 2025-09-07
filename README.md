@@ -6,78 +6,49 @@
   <a href="./README_ZH.md">中文</a>
 </p>
 
-**LinkEveryWord** is a comprehensive file search and link management solution designed to help you efficiently find and manage your digital files. This project includes a powerful desktop search application, a seamlessly integrated browser extension, and a web platform that is still in the planning stages.
+**LinkEveryWord** is a powerful, cross-platform file search ecosystem that enables lightning-fast file discovery and seamless text-to-file linking. Built with modern web technologies, it provides instant search capabilities across desktop and browser environments.
 
-## Project Components
+## Key Features
 
-This project consists of three main components, each with a different purpose:
+- **⚡ Lightning-Fast Search**: Millisecond-level file search powered by Everything SDK
+- **🌐 Browser Integration**: Select any text on web pages and instantly search your local files
+- **🖥️ Cross-Platform**: Works seamlessly across Windows desktop and Chrome browser
+- **🎯 Smart Fallback**: Automatic fallback to Windows Search when Everything is unavailable
+- **🔧 Highly Configurable**: Customizable search parameters and UI preferences
+- **📱 Modern UI**: Clean, responsive interface built with modern web technologies
 
-### 🖥️ Desktop Application (Completed)
+## Components
 
-**Location**: [`/desktop-app/`](./desktop-app/)
-**Technology**: `Python` `Flask` `Everything SDK` `PyInstaller`
-**Description**: A powerful Windows desktop application powered by the Everything SDK, providing real-time local file search functionality. It features a modern web-based interface and can run as a standalone executable.
+This project consists of two main components:
 
-For more details, please refer to the [Desktop Application README](./desktop-app/README.md).
+### 🖥️ Desktop Application
+High-performance Windows desktop application providing real-time local file search powered by Everything SDK. Features a modern web interface and runs as a standalone executable.
 
-### 🌐 Chrome Extension (Completed)
+### 🌐 Chrome Extension
+Browser extension that enables text selection on any webpage with instant file search capabilities. Results display in an elegant side panel with customizable backend integration.
 
-**Location**: [`/chrome-extension/`](./chrome-extension/)
-**Technology**: `React` `TypeScript` `shadcn/ui` `Plasmo`
-**Description**: A Chrome browser extension that allows you to select text on any webpage and perform a real-time search using a customizable backend (such as the LinkEveryWord desktop application). The search results are displayed in a clean side panel.
+## Installation
 
-For more details, please refer to the [Chrome Extension README](./chrome-extension/README.md).
+### 🚀 Quick Start
 
-### ☁️ Web Application (Completed)
+#### Chrome Extension
+Install directly from the Chrome Web Store:
+**[Install Chrome Extension →](https://chrome.google.com/webstore/detail/lkpkimhpldonggkkcoidicbeembcpemj)**
 
-**Location**: [`/web/`](./web/)
-**Technology**: `Cloudflare Pages` `Hono` `TypeScript`
-**Description**: A static website that introduces the project, provides installation guides for the Chrome extension and Desktop app, and hosts the Privacy Policy page.
+#### Desktop Application
+Download the latest release:
+**[Download from GitHub Releases →](https://github.com/mesak/LinkEveryWord/releases)**
 
-For more details, please refer to the [Web Application README](./web/README.md).
+### System Requirements
+- **Desktop App**: Windows 10/11
+- **Chrome Extension**: Chrome Browser
 
-## Development Status
+## Development
 
-| Component              | Status      | Progress | Description                                      |
-| ---------------------- | ----------- | -------- | ------------------------------------------------ |
-| **Desktop Application**| `v1.0.0`    | 100%     | Core functionality is stable and a release version is available. |
-| **Chrome Extension**   | `v0.0.1`    | 100%     | Fully functional and ready for development and building. |
-| **Web Application**    | `v0.1.0`    | 100%     | A static website for project introduction and guides. |
+For developers who want to contribute or modify the code, please refer to the individual component documentation:
 
-## Quick Start
-
-### Desktop Application
-
-1.  Go to the `desktop-app/dist` directory.
-2.  Run the `EverythingFlaskSearch.exe` executable.
-3.  Your browser will automatically open and display the search interface.
-
-For development:
-```bash
-# Development mode
-cd desktop-app
-pip install flask flask-cors
-python app_standalone.py
-```
-
-### Chrome Extension
-
-1.  Go to the `chrome-extension` directory.
-2.  Install dependencies: `npm install`
-3.  Start the development server: `npm run dev`
-4.  In Chrome, load the unpacked extension from the `build/chrome-mv3-dev` directory.
-
-### Web Application
-
-The web application is not yet in the development phase.
-
-## Contribution Guidelines
-
-1.  Fork this project.
-2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4.  Push to the branch (`git push origin feature/AmazingFeature`).
-5.  Open a Pull Request.
+- **Desktop Application**: See [`/desktop-app/README.md`](./desktop-app/README.md)
+- **Chrome Extension**: See [`/chrome-extension/README.md`](./chrome-extension/README.md)
 
 ## License
 

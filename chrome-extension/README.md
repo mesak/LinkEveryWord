@@ -1,97 +1,137 @@
 # LinkEveryWord Chrome Extension
 
-一個強大的Chrome擴展，讓您能夠快速搜尋網頁中選取的文字。
+A powerful Chrome extension that bridges web browsing and local file search, enabling instant file discovery from any webpage text selection.
 
-## 功能特色
+## Features
 
-- **快速文字搜尋**：在任何網頁上選取文字，按下快速鍵即可搜尋
-- **側邊面板**：美觀的側邊面板顯示搜尋結果
-- **自訂設定**：設定後端API和搜尋參數
-- **靈活快速鍵**：可自訂觸發搜尋的快速鍵組合
+- **🔍 Instant Text Search**: Select any text on web pages and search your local files instantly
+- **📋 Elegant Side Panel**: Clean, responsive interface for displaying search results
+- **⚙️ Flexible Configuration**: Customizable backend API endpoints and search parameters
+- **⌨️ Smart Shortcuts**: Configurable keyboard shortcuts for seamless workflow integration
+- **🎨 Modern UI**: Built with shadcn/ui components and Tailwind CSS for a polished experience
 
-## 安裝方式
+## Installation
 
-1. 複製此專案
-2. 運行 `npm install` 安裝依賴
-3. 運行 `npm run dev` 啟動開發模式
-4. 在Chrome中載入 `build/chrome-mv3-dev` 目錄作為未打包擴展
-
-## 使用方法
-
-### 基本使用
-1. 在任何網頁上選取文字
-2. 按下預設快速鍵 `Ctrl+Shift+F` (或自訂快速鍵)
-3. 側邊面板將自動打開並顯示搜尋結果
-
-### 設定
-1. 點擊擴展圖示 > 設定
-2. 設定您的後端API網址 (例如: `http://127.0.0.1:5000/search`)
-3. 設定查詢參數鍵 (預設: `q`)
-4. 設定快速鍵組合
-
-## 技術架構
-
-- **框架**：React + TypeScript
-- **UI框架**：shadcn/ui + Tailwind CSS
-- **建構工具**：Plasmo
-- **Manifest**：Chrome Extension Manifest V3
-
-## 開發
-
+### Development Setup
 ```bash
-# 安裝依賴
+# Clone and install dependencies
+git clone <repository-url>
+cd chrome-extension
 npm install
 
-# 開發模式
+# Start development server
 npm run dev
 
-# 建構生產版本
-npm run build
+# Load extension in Chrome
+# 1. Open Chrome Extensions (chrome://extensions/)
+# 2. Enable Developer mode
+# 3. Click "Load unpacked" and select build/chrome-mv3-dev directory
+```
 
-# 打包
+### Production Build
+```bash
+npm run build
 npm run package
 ```
 
-## 檔案結構
+## Usage
+
+### Quick Start
+1. **Select text** on any webpage
+2. **Press shortcut** `Ctrl+Shift+F` (customizable)
+3. **View results** in the automatically opened side panel
+
+### Configuration
+Access extension settings via:
+- Click extension icon → Options
+- Configure backend API URL (e.g., `http://127.0.0.1:5000/search`)
+- Set query parameter key (default: `q`)
+- Customize keyboard shortcuts
+
+## Technology Stack
+
+- **Framework**: React 18 + TypeScript
+- **UI Library**: shadcn/ui + Tailwind CSS
+- **Build Tool**: Plasmo Framework
+- **Manifest**: Chrome Extension Manifest V3
+- **Architecture**: Modern component-based design with hooks
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Development mode with hot reload
+npm run dev
+
+# Production build
+npm run build
+
+# Create distribution package
+npm run package
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+```
+
+## Project Structure
 
 ```
-chrome-extension-app/
-├── assets/                 # 靜態資源
-├── components/            # React組件
-│   └── ui/               # shadcn/ui組件
-├── contents/             # Content scripts
-├── background.ts         # Background script
-├── popup.tsx            # 擴展彈出視窗
-├── sidepanel.tsx        # 側邊面板
-├── options.tsx          # 設定頁面
-└── package.json         # 專案配置
+chrome-extension/
+├── assets/              # Static assets and icons
+├── components/          # React components
+│   └── ui/             # shadcn/ui component library
+├── contents/           # Content scripts for web page interaction
+├── lib/                # Utility functions and helpers
+├── locales/            # Internationalization files
+├── background.ts       # Service worker (background script)
+├── sidepanel.tsx       # Main search interface
+├── options.tsx         # Extension settings page
+└── package.json        # Project configuration
 ```
 
-## API格式
+## API Integration
 
-後端API應接受GET請求，格式如下：
+### Backend Requirements
+The extension expects a REST API endpoint that accepts GET requests:
 
-```
+```http
 GET {backendUrl}?{queryKey}={selectedText}
 ```
 
-回應格式：
+### Response Format
 ```json
 {
   "results": [
     {
-      "title": "搜尋結果標題",
-      "description": "搜尋結果描述",
-      "url": "選用的結果連結"
+      "title": "File or result title",
+      "description": "Brief description or file path",
+      "url": "Optional direct link to result"
     }
   ]
 }
 ```
 
-## 授權
+### Example Integration
+Works seamlessly with the LinkEveryWord Desktop Application:
+```bash
+# Default configuration
+Backend URL: http://127.0.0.1:5000/search
+Query Key: q
+```
 
-MIT License
+## Contributing
 
-## 開發者
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-Mesak
+## License
+
+MIT License - see [LICENSE](../LICENSE) for details.
