@@ -71,7 +71,7 @@ jobs:
         run: |
           $version = "${{ steps.version-updater.outputs.version }}"
           $zipName = "EverythingFlaskSearch-v$version-win64.zip"
-          Compress-Archive -Path "dist/EverythingFlaskSearch.exe", "README.md", "dll/", "run/start_background.bat.txt" -DestinationPath $zipName -Force
+          Compress-Archive -Path "dist/EverythingFlaskSearch.exe", "README.md", "dll/" -DestinationPath $zipName -Force
           echo "zip_name=$zipName" >> $env:GITHUB_OUTPUT
 
       - name: Create GitHub Release
