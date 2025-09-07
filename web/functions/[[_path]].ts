@@ -697,8 +697,7 @@ app.get('/install/desktop', (c: Context) => {
           ${dict.desktop.method1[0]}
         </h2>
         <ol style="margin-bottom: 24px;">
-          <li style="margin: 16px 0; font-size: 1.1rem;">${dict.desktop.method1[1]}</li>
-          <li style="margin: 16px 0; font-size: 1.1rem;">${dict.desktop.method1[2]}</li>
+          ${dict.desktop.method1.slice(1).map((s) => html`<li style="margin: 16px 0; font-size: 1.1rem;">${raw(s)}</li>`)}
         </ol>
         <div style="padding: 16px; background: var(--bg-tertiary); border-radius: 8px; border-left: 4px solid var(--accent-success);">
           <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem;">

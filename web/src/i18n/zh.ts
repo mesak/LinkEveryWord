@@ -8,10 +8,10 @@ export const zh: Dict = {
   home: {
     title: '讓連結無所不在',
     intro: 'LinkEveryWord 提供兩個組件：Chrome 擴充功能與 Windows 桌面應用程式，協助你快速查找與連結需要的資訊。',
-    quickStart: '立即開始',
+    quickStart: '快速開始',
     items: {
-      chrome: 'Chrome 擴充功能',
-      desktop: 'Windows 桌面應用程式',
+      chrome: '安裝 Chrome 擴充功能（側邊面板、選字搜尋、快捷鍵）',
+      desktop: '安裝 Desktop App（Everything 本地檔案搜尋 + Web 介面）',
     },
   },
   chrome: {
@@ -33,11 +33,16 @@ export const zh: Dict = {
   },
   desktop: {
     title: 'Desktop App 安裝教學',
-    method1: ['方法一：直接執行（建議）', '下載發行版壓縮檔（若有提供）並解壓。', '直接執行 dist/EverythingFlaskSearch.exe。'],
+    method1: [
+      '方法一：直接執行（建議）',
+      '先安裝 <a href="https://www.voidtools.com/" target="_blank" rel="noopener noreferrer">Everything</a>（可選，能提供更快的本地搜尋體驗）',
+      '下載發行版<a href="https://github.com/mesak/LinkEveryWord/releases/" target="_blank" rel="noopener noreferrer">壓縮檔並解壓</a>',
+      '直接執行 EverythingFlaskSearch.exe'
+    ],
     method2: [
       '方法二：開發模式啟動',
       '安裝 Python 3.13+。',
-      '進入 desktop-app 目錄，安裝相依：pip install flask flask-cors。',
+      '進入 desktop-app 目錄，安裝相依：pip install -r requirements.txt',
       '啟動：python app_standalone.py。',
     ],
     reqTitle: '系統需求',
