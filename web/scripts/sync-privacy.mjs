@@ -1,4 +1,4 @@
-// Sync chrome-extension/privacy-policy.md into web/src/content/privacy.ts
+// Generate web/src/content/privacy.{zh|en}.ts from web/content/privacy-policy*.md
 import { readFile, writeFile, mkdir, copyFile, access } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'

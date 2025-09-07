@@ -564,7 +564,7 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             </div>
             <div class="footer-info">
               © ${new Date().getFullYear()} LinkEveryWord • MIT License<br>
-              Created by <a href="mailto:mesakey@gmail.com">Mesak</a> • 
+              Created by <a href="https://github.com/mesak">Mesak</a> • 
               Hosted on <a href="https://pages.cloudflare.com/" target="_blank" rel="noreferrer">Cloudflare Pages</a>
             </div>
           </div>

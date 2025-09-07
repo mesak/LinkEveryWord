@@ -97,13 +97,15 @@ http://localhost:8788/install/desktop?lang=en
 ### 隱私政策自動化系統
 平台具備完整的隱私政策自動化管理系統：
 
-**源檔案** (位於 `web/content/`):
-- `privacy-policy.md` (繁體中文版本)
-- `privacy-policy.en.md` (英文版本)
+**源檔案（需保留，請直接編輯這些 Markdown）** 位於 `web/content/`：
+- `privacy-policy.md`（繁體中文）
+- `privacy-policy.en.md`（英文）
 
-**生成檔案** (自動生成):
-- `src/content/privacy.zh.ts`
-- `src/content/privacy.en.ts`
+**生成檔案（由腳本自動產生，請勿手動編輯）** 位於 `web/src/content/`：
+- `privacy.zh.ts`（由繁中 Markdown 生成，供執行時載入）
+- `privacy.en.ts`（由英文 Markdown 生成，供執行時載入）
+
+說明：網站在執行時會直接匯入上述 TypeScript 內容檔（`privacy.zh.ts`/`privacy.en.ts`）。Markdown 是唯一來源（source of truth），請只修改 `web/content` 下的檔案，然後執行同步腳本生成 TS 檔。
 
 **同步流程**:
 ```bash
@@ -165,16 +167,16 @@ web/
 │   └── [[_path]].ts      # Cloudflare Pages Functions 入口點
 ├── src/
 │   ├── content/          # 自動生成的內容檔案
-│   │   ├── privacy.zh.ts # 繁中隱私政策 (自動生成)
-│   │   └── privacy.en.ts # 英文隱私政策 (自動生成)
+│   │   ├── privacy.zh.ts # 繁中隱私政策（自動生成，請勿手改）
+│   │   └── privacy.en.ts # 英文隱私政策（自動生成，請勿手改）
 │   ├── i18n/            # 國際化系統
 │   │   ├── types.ts     # 類型定義
 │   │   ├── zh.ts        # 繁體中文
 │   │   └── en.ts        # 英文
 │   └── types/           # TypeScript 類型定義
-├── content/             # 源 Markdown 檔案
-│   ├── privacy-policy.md    # 繁中隱私政策源檔案
-│   └── privacy-policy.en.md # 英文隱私政策源檔案
+├── content/             # 源 Markdown 檔案（請編輯這裡）
+│   ├── privacy-policy.md    # 繁中隱私政策（來源）
+│   └── privacy-policy.en.md # 英文隱私政策（來源）
 ├── assets/              # 靜態資源
 │   ├── logo.svg         # 專案 Logo (從 shared 同步)
 │   ├── image.png        # 專案圖片 (從 shared 同步)
@@ -221,10 +223,12 @@ const getLang = (c: Context): { dict: Dict; code: 'zh' | 'en' } => {
 4. 測試多語言功能
 
 ### 更新隱私政策
-1. 編輯 `content/privacy-policy.md` (繁中)
-2. 編輯 `content/privacy-policy.en.md` (英文)
-3. 執行 `npm run sync:privacy` 同步到 TypeScript
+1. 編輯 `content/privacy-policy.md`（繁中）
+2. 編輯 `content/privacy-policy.en.md`（英文）
+3. 執行 `npm run sync:privacy` 生成 `src/content/privacy.zh.ts`、`src/content/privacy.en.ts`
 4. 測試隱私政策頁面
+
+注意：`src/content/privacy.zh.ts` 與 `src/content/privacy.en.ts` 為自動生成且被程式直接匯入的執行時檔案，請勿直接修改；請以 `content/` 下的 Markdown 作為唯一來源。
 
 ### 新增靜態資源
 1. 將檔案放入 `assets/` 目錄
