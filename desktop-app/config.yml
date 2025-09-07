@@ -18,6 +18,8 @@ app:
   # 應用程式名稱
   name: 'Everything Flask 搜尋應用程式'
   
+  # 是否啟動後自動開啟瀏覽器 (true=自動開啟, false=不自動開啟)
+  auto_open_browser: false
   # 瀏覽器自動開啟延遲時間 (秒)
   browser_delay: 2
 
