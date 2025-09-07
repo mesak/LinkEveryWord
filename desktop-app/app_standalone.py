@@ -49,6 +49,7 @@ def load_config():
         },
         'app': {
             'name': 'Everything Flask 搜尋應用程式',
+            'auto_open_browser': True,
             'browser_delay': 2
         },
         'logging': {
@@ -113,8 +114,10 @@ app:
   # 應用程式名稱
   name: 'Everything Flask 搜尋應用程式'
   
-  # 瀏覽器自動開啟延遲時間 (秒)
-  browser_delay: 2
+    # 是否啟動後自動開啟瀏覽器 (true=自動開啟, false=不自動開啟)
+    auto_open_browser: true
+    # 瀏覽器自動開啟延遲時間 (秒)
+    browser_delay: 2
 
 logging:
   # 日誌級別: DEBUG, INFO, WARNING, ERROR, CRITICAL
@@ -616,18 +619,20 @@ def main():
 
     APP_LOGGER.info(f"Web 服務將啟動在 {host}:{port}")
     print()
-    print("🌐 Web 介面將在瀏覽器中自動開啟")
+    if CONFIG['app'].get('auto_open_browser', True):
+        print("🌐 Web 介面將在瀏覽器中自動開啟")
+        # 在新執行緒中開啟瀏覽器
+        APP_LOGGER.info("啟動瀏覽器線程")
+        browser_thread = threading.Thread(target=open_browser)
+        browser_thread.daemon = True
+        browser_thread.start()
+    else:
+        print("🌐 Web 介面啟動後不會自動開啟瀏覽器 (已關閉 auto_open_browser)")
     print(f"📍 服務地址: http://{host}:{port}")
     print(f"📊 狀態檢查: http://{host}:{port}/status")
     print()
     print("💡 按 Ctrl+C 停止服務")
     print("=" * 60)
-
-    # 在新執行緒中開啟瀏覽器
-    APP_LOGGER.info("啟動瀏覽器線程")
-    browser_thread = threading.Thread(target=open_browser)
-    browser_thread.daemon = True
-    browser_thread.start()
 
     try:
         # 啟動 Flask 應用程式
