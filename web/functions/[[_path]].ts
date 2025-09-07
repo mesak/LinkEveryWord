@@ -488,32 +488,79 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             background: rgba(10, 10, 11, 0.98);
             backdrop-filter: blur(20px);
             border-top: 1px solid var(--border-primary);
-            padding: 20px;
+            padding: 24px;
             z-index: 99;
+            box-shadow: var(--shadow-lg);
           }
 
           .mobile-nav.active {
             display: block;
+            animation: slideDown 0.3s ease-out;
+          }
+
+          @keyframes slideDown {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
 
           .mobile-nav nav {
             flex-direction: column;
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 24px;
           }
 
           .mobile-nav nav a {
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: 16px 20px;
+            border-radius: 12px;
             text-align: center;
             background: var(--bg-tertiary);
+            width: 100%;
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            border: 1px solid var(--border-primary);
+            transition: all 0.2s ease;
+          }
+
+          .mobile-nav nav a:hover,
+          .mobile-nav nav a:active {
+            background: var(--bg-card);
+            border-color: var(--border-secondary);
+            transform: translateY(-1px);
+          }
+
+          .mobile-nav nav a.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
           }
 
           .mobile-nav .mobile-controls {
             display: flex;
             flex-direction: column;
             gap: 16px;
-            align-items: center;
+            align-items: stretch;
+            width: 100%;
+          }
+
+          .mobile-nav .lang-switcher {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 16px;
+          }
+
+          .mobile-nav .donate-btn {
+            width: 100%;
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 700;
           }
 
           /* Enhanced Responsive Design */
@@ -537,6 +584,62 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             .features-grid {
               grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
               gap: 20px;
+            }
+
+            /* 平板導航優化 */
+            .nav-container {
+              gap: 20px;
+            }
+
+            nav {
+              gap: 16px;
+            }
+
+            nav a {
+              padding: 10px 14px;
+              font-size: 15px;
+            }
+
+            .lang-switcher {
+              padding: 8px 10px;
+            }
+
+            .donate-btn {
+              padding: 10px 16px;
+              font-size: 15px;
+            }
+          }
+
+          /* 平板專用斷點 (769px - 1024px) */
+          @media (max-width: 1024px) and (min-width: 769px) {
+            .header-container {
+              flex-wrap: wrap;
+              gap: 16px;
+              justify-content: center;
+            }
+
+            .logo {
+              margin: 0 auto;
+            }
+
+            .nav-container {
+              width: 100%;
+              justify-content: center;
+              margin-top: 16px;
+              padding-top: 16px;
+              border-top: 1px solid var(--border-primary);
+            }
+
+            nav {
+              flex: 1;
+              justify-content: center;
+              max-width: 600px;
+            }
+
+            nav a {
+              flex: 1;
+              text-align: center;
+              min-width: 80px;
             }
           }
 
@@ -675,10 +778,11 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             }
 
             .btn {
-              padding: 12px 20px;
-              font-size: 14px;
+              padding: 16px 24px;
+              font-size: 16px;
               width: 100%;
               justify-content: center;
+              min-height: 48px;
             }
 
             .features-grid {
