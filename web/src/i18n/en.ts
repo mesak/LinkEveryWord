@@ -8,10 +8,10 @@ export const en: Dict = {
   home: {
     title: 'Link everything, fast',
     intro: 'Two parts: a Chrome extension and a Windows desktop app to help you find and connect information quickly.',
-    quickStart: 'Get started',
+    quickStart: 'Get Started',
     items: {
-      chrome: 'Install Chrome extension (side panel, selection search, hotkeys)',
-      desktop: 'Install Desktop App (Everything local search + Web UI)',
+      chrome: 'Chrome Extension',
+      desktop: 'Windows Desktop App',
     },
   },
   chrome: {
