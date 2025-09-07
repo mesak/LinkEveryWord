@@ -84,6 +84,9 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             color: var(--text-primary);
             font-size: 16px;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
           }
 
           /* Header Styles */
@@ -459,23 +462,96 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             color: var(--text-secondary);
           }
 
-          /* Responsive Design */
+          /* Mobile Menu Toggle */
+          .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+          }
+
+          .mobile-menu-toggle:hover {
+            background: var(--bg-tertiary);
+          }
+
+          .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 11, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-primary);
+            padding: 20px;
+            z-index: 99;
+          }
+
+          .mobile-nav.active {
+            display: block;
+          }
+
+          .mobile-nav nav {
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+          }
+
+          .mobile-nav nav a {
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: center;
+            background: var(--bg-tertiary);
+          }
+
+          .mobile-nav .mobile-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+          }
+
+          /* Enhanced Responsive Design */
+          @media (max-width: 1024px) {
+            .header-container {
+              padding: 0 20px;
+            }
+
+            main {
+              padding: 0 20px;
+            }
+
+            .hero {
+              padding: 60px 0 100px;
+            }
+
+            .hero-grid {
+              gap: 48px;
+            }
+
+            .features-grid {
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+              gap: 20px;
+            }
+          }
+
           @media (max-width: 768px) {
             .header-container {
               padding: 0 16px;
-              flex-direction: column;
-              gap: 16px;
+              position: relative;
             }
 
             .nav-container {
-              flex-direction: column;
-              gap: 16px;
+              display: none;
             }
 
-            nav {
-              flex-wrap: wrap;
-              justify-content: center;
-              gap: 16px;
+            .mobile-menu-toggle {
+              display: block;
             }
 
             main {
@@ -483,48 +559,295 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             }
 
             .hero {
-              padding: 48px 0 80px;
+              padding: 40px 0 60px;
             }
 
             .hero-grid {
               grid-template-columns: 1fr;
-              gap: 40px;
+              gap: 32px;
               text-align: center;
             }
 
             .hero-content h1 {
-              font-size: 2.5rem;
+              font-size: clamp(2rem, 8vw, 2.5rem);
+              margin-bottom: 16px;
+            }
+
+            .hero-content p {
+              font-size: 1.1rem;
+              margin-bottom: 24px;
             }
 
             .hero-actions {
               justify-content: center;
+              gap: 12px;
             }
 
             .features-grid {
               grid-template-columns: 1fr;
-              margin: 48px 0;
+              margin: 40px 0;
+              gap: 20px;
+            }
+
+            .feature-card {
+              padding: 24px;
+            }
+
+            .feature-icon {
+              width: 56px;
+              height: 56px;
+              font-size: 24px;
             }
 
             .card {
-              padding: 24px;
-              margin: 24px 0;
+              padding: 20px;
+              margin: 20px 0;
+              border-radius: 12px;
+            }
+
+            .card h2 {
+              font-size: 1.4rem;
+              flex-direction: column;
+              gap: 8px;
+              text-align: center;
+            }
+
+            .card h3 {
+              font-size: 1.2rem;
+              flex-direction: column;
+              gap: 6px;
+              text-align: center;
+            }
+
+            .card ol, .card ul {
+              padding-left: 20px;
+            }
+
+            .card li {
+              font-size: 1rem;
+              margin: 10px 0;
+            }
+
+            footer {
+              margin-top: 80px;
+              padding: 32px 0;
+            }
+
+            .footer-content {
+              padding: 0 16px;
+            }
+
+            .footer-donate img {
+              max-width: 200px;
+              height: auto;
             }
           }
 
           @media (max-width: 480px) {
-            .btn {
-              padding: 12px 20px;
+            body {
               font-size: 14px;
+            }
+
+            .header-container {
+              padding: 0 12px;
+            }
+
+            main {
+              padding: 0 12px;
+            }
+
+            .hero {
+              padding: 32px 0 48px;
+            }
+
+            .hero-content h1 {
+              font-size: clamp(1.8rem, 10vw, 2.2rem);
+              line-height: 1.2;
+            }
+
+            .hero-content p {
+              font-size: 1rem;
             }
 
             .hero-actions {
               flex-direction: column;
+              width: 100%;
+            }
+
+            .btn {
+              padding: 12px 20px;
+              font-size: 14px;
+              width: 100%;
+              justify-content: center;
+            }
+
+            .features-grid {
+              margin: 32px 0;
+            }
+
+            .feature-card {
+              padding: 20px;
+            }
+
+            .feature-icon {
+              width: 48px;
+              height: 48px;
+              font-size: 20px;
+            }
+
+            .card {
+              padding: 16px;
+              margin: 16px 0;
+            }
+
+            .card h2 {
+              font-size: 1.2rem;
+            }
+
+            .card h3 {
+              font-size: 1.1rem;
+            }
+
+            .card li {
+              font-size: 0.95rem;
             }
 
             .lang-switcher {
               flex-direction: column;
               gap: 4px;
+              padding: 8px;
             }
+
+            .donate-btn {
+              padding: 8px 16px;
+              font-size: 14px;
+              width: 100%;
+              text-align: center;
+            }
+
+            .footer-donate img {
+              max-width: 180px;
+            }
+
+            .footer-info {
+              font-size: 12px;
+            }
+          }
+
+          @media (max-width: 360px) {
+            .hero-content h1 {
+              font-size: 1.6rem;
+            }
+
+            .card {
+              padding: 12px;
+            }
+
+            .feature-card {
+              padding: 16px;
+            }
+
+            .btn {
+              padding: 10px 16px;
+              font-size: 13px;
+            }
+          }
+
+          /* Touch-friendly improvements */
+          @media (hover: none) and (pointer: coarse) {
+            .btn:hover {
+              transform: none;
+            }
+
+            .btn:active {
+              transform: scale(0.98);
+            }
+
+            .feature-card:hover {
+              transform: none;
+            }
+
+            .feature-card:active {
+              transform: scale(0.98);
+            }
+
+            nav a:hover {
+              background: none;
+            }
+
+            nav a:active {
+              background: var(--bg-tertiary);
+            }
+
+            /* Larger touch targets for mobile */
+            .btn {
+              min-height: 44px;
+              min-width: 44px;
+            }
+
+            nav a {
+              min-height: 44px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .mobile-menu-toggle {
+              min-height: 44px;
+              min-width: 44px;
+            }
+          }
+
+          /* Improve text selection on mobile */
+          ::selection {
+            background: rgba(59, 130, 246, 0.3);
+            color: var(--text-primary);
+          }
+
+          ::-moz-selection {
+            background: rgba(59, 130, 246, 0.3);
+            color: var(--text-primary);
+          }
+
+          /* Smooth scrolling for all browsers */
+          html {
+            scroll-behavior: smooth;
+          }
+
+          /* Focus styles for accessibility */
+          .btn:focus,
+          nav a:focus,
+          .mobile-menu-toggle:focus {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+          }
+
+          /* Loading animation */
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+          }
+
+          .loading {
+            animation: pulse 1s infinite;
+          }
+
+          /* Improved scrollbar for webkit browsers */
+          ::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+          }
+
+          ::-webkit-scrollbar-thumb {
+            background: var(--border-secondary);
+            border-radius: 4px;
+          }
+
+          ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
           }
         </style>
       </head>
@@ -535,6 +858,8 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
               <img src="/assets/logo.svg" alt="logo" />
               ${dict.common.brand}
             </a>
+            
+            <!-- Desktop Navigation -->
             <div class="nav-container">
               <nav>
                 <a class="${c.req.path === '/' ? 'active' : ''}" href="${withLangQuery('/', code)}">${dict.common.nav.home}</a>
@@ -544,6 +869,30 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
                 <a href="https://github.com/mesak/LinkEveryWord" target="_blank" rel="noreferrer">${dict.common.nav.github}</a>
               </nav>
               <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="lang-switcher">
+                  <span>${dict.common.nav.lang}:</span>
+                  <a href="${withLangQuery(c.req.path, 'zh')}">繁中</a>
+                  <a href="${withLangQuery(c.req.path, 'en')}">EN</a>
+                </div>
+                <a class="donate-btn" href="https://www.buymeacoffee.com/mesak" target="_blank" rel="noreferrer">${dict.common.nav.donate}</a>
+              </div>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+              ☰
+            </button>
+
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav" id="mobileNav">
+              <nav>
+                <a class="${c.req.path === '/' ? 'active' : ''}" href="${withLangQuery('/', code)}">${dict.common.nav.home}</a>
+                <a class="${c.req.path.startsWith('/install/chrome') ? 'active' : ''}" href="${withLangQuery('/install/chrome', code)}">${dict.common.nav.chrome}</a>
+                <a class="${c.req.path.startsWith('/install/desktop') ? 'active' : ''}" href="${withLangQuery('/install/desktop', code)}">${dict.common.nav.desktop}</a>
+                <a class="${c.req.path.startsWith('/privacy') ? 'active' : ''}" href="${withLangQuery('/privacy', code)}">${dict.common.nav.privacy}</a>
+                <a href="https://github.com/mesak/LinkEveryWord" target="_blank" rel="noreferrer">${dict.common.nav.github}</a>
+              </nav>
+              <div class="mobile-controls">
                 <div class="lang-switcher">
                   <span>${dict.common.nav.lang}:</span>
                   <a href="${withLangQuery(c.req.path, 'zh')}">繁中</a>
@@ -569,6 +918,87 @@ const Layout = (c: Context, content: any, opts?: { title?: string }) => {
             </div>
           </div>
         </footer>
+        
+        <script>
+          function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (mobileNav.classList.contains('active')) {
+              mobileNav.classList.remove('active');
+              toggle.innerHTML = '☰';
+              toggle.setAttribute('aria-expanded', 'false');
+            } else {
+              mobileNav.classList.add('active');
+              toggle.innerHTML = '✕';
+              toggle.setAttribute('aria-expanded', 'true');
+            }
+          }
+
+          // Close mobile menu when clicking outside
+          document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            const header = document.querySelector('header');
+            
+            if (!header.contains(event.target) && mobileNav.classList.contains('active')) {
+              mobileNav.classList.remove('active');
+              toggle.innerHTML = '☰';
+              toggle.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          // Close mobile menu when clicking on a link
+          document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', function() {
+              const mobileNav = document.getElementById('mobileNav');
+              const toggle = document.querySelector('.mobile-menu-toggle');
+              
+              mobileNav.classList.remove('active');
+              toggle.innerHTML = '☰';
+              toggle.setAttribute('aria-expanded', 'false');
+            });
+          });
+
+          // Handle window resize
+          window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+              const mobileNav = document.getElementById('mobileNav');
+              const toggle = document.querySelector('.mobile-menu-toggle');
+              
+              mobileNav.classList.remove('active');
+              toggle.innerHTML = '☰';
+              toggle.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          // Smooth scroll for anchor links
+          document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+              e.preventDefault();
+              const target = document.querySelector(this.getAttribute('href'));
+              if (target) {
+                target.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            });
+          });
+
+          // Add loading states for buttons
+          document.querySelectorAll('.btn').forEach(btn => {
+            if (btn.target === '_blank') {
+              btn.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = originalText.replace(/🚀|📖|☕/, '⏳');
+                setTimeout(() => {
+                  this.innerHTML = originalText;
+                }, 1000);
+              });
+            }
+          });
+        </script>
       </body>
     </html>`)
 }
@@ -641,7 +1071,7 @@ app.get('/install/chrome', (c: Context) => {
           ${dict.chrome.steps.map((s) => html`<li style="margin: 16px 0; font-size: 1.1rem;">${s}</li>`)}
         </ol>
         <div style="text-align: center;">
-          <a href="${storeUrl}" class="btn btn-primary" target="_blank" rel="noopener noreferrer" style="font-size: 1.1rem; padding: 16px 32px;">
+          <a href="${storeUrl}" class="btn btn-primary" target="_blank" rel="noopener noreferrer" style="font-size: 1.1rem; padding: 16px 32px; display: inline-flex; align-items: center; gap: 8px;">
             🚀 ${dict.chrome.installFromStore}
           </a>
         </div>
@@ -669,8 +1099,8 @@ app.get('/install/chrome', (c: Context) => {
         </h3>
         <p style="margin: 0; font-size: 1.05rem;">
           ${code === 'en'
-            ? 'We respect your privacy. See the full policy on the '
-            : '我們尊重你的隱私。完整政策見 '}
+        ? 'We respect your privacy. See the full policy on the '
+        : '我們尊重你的隱私。完整政策見 '}
           <a href="${withLangQuery('/privacy', code)}" style="font-weight: 600;">${dict.privacy.title}</a>.
         </p>
       </div>
@@ -697,8 +1127,7 @@ app.get('/install/desktop', (c: Context) => {
           ${dict.desktop.method1[0]}
         </h2>
         <ol style="margin-bottom: 24px;">
-          <li style="margin: 16px 0; font-size: 1.1rem;">${dict.desktop.method1[1]}</li>
-          <li style="margin: 16px 0; font-size: 1.1rem;">${dict.desktop.method1[2]}</li>
+          ${dict.desktop.method1.slice(1).map((s) => html`<li style="margin: 16px 0; font-size: 1.1rem;">${raw(s)}</li>`)}
         </ol>
         <div style="padding: 16px; background: var(--bg-tertiary); border-radius: 8px; border-left: 4px solid var(--accent-success);">
           <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem;">
@@ -755,9 +1184,9 @@ app.get('/privacy', (c: Context) => {
           ${dict.privacy.title}
         </h1>
         <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
-          ${code === 'en' 
-            ? 'We are committed to protecting your privacy and being transparent about our data practices.'
-            : '我們致力於保護您的隱私，並對我們的數據處理方式保持透明。'}
+          ${code === 'en'
+        ? 'We are committed to protecting your privacy and being transparent about our data practices.'
+        : '我們致力於保護您的隱私，並對我們的數據處理方式保持透明。'}
         </p>
       </div>
       

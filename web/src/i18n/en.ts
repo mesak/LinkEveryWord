@@ -8,10 +8,10 @@ export const en: Dict = {
   home: {
     title: 'Link everything, fast',
     intro: 'Two parts: a Chrome extension and a Windows desktop app to help you find and connect information quickly.',
-    quickStart: 'Get Started',
+    quickStart: 'Get started',
     items: {
-      chrome: 'Chrome Extension',
-      desktop: 'Windows Desktop App',
+      chrome: 'Install Chrome extension (side panel, selection search, hotkeys)',
+      desktop: 'Install Desktop App (Everything local search + Web UI)',
     },
   },
   chrome: {
@@ -33,11 +33,16 @@ export const en: Dict = {
   },
   desktop: {
     title: 'Desktop App installation',
-    method1: ['Method 1: Run binary (recommended)', 'Download the release archive (if available) and extract.', 'Run dist/EverythingFlaskSearch.exe.'],
+    method1: [
+      'Method 1: Run binary (recommended)',
+      'Optionally install <a href="https://www.voidtools.com/" target="_blank" rel="noopener noreferrer">Everything</a> for faster local search',
+      '<a href="https://github.com/mesak/LinkEveryWord/releases/" target="_blank" rel="noopener noreferrer">Download the release archive and extract</a>',
+      'Run EverythingFlaskSearch.exe'
+    ],
     method2: [
       'Method 2: Dev mode',
       'Install Python 3.13+.',
-      'Go to desktop-app, install deps: pip install flask flask-cors.',
+      'Go to desktop-app, install deps: pip install -r requirements.txt',
       'Start: python app_standalone.py.',
     ],
     reqTitle: 'Requirements',
