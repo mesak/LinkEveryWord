@@ -8,10 +8,10 @@ export const zh: Dict = {
   home: {
     title: '讓連結無所不在',
     intro: 'LinkEveryWord 提供兩個組件：Chrome 擴充功能與 Windows 桌面應用程式，協助你快速查找與連結需要的資訊。',
-    quickStart: '快速開始',
+    quickStart: '立即開始',
     items: {
-      chrome: '安裝 Chrome 擴充功能（側邊面板、選字搜尋、快捷鍵）',
-      desktop: '安裝 Desktop App（Everything 本地檔案搜尋 + Web 介面）',
+      chrome: 'Chrome 擴充功能',
+      desktop: 'Windows 桌面應用程式',
     },
   },
   chrome: {
